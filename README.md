@@ -6,7 +6,6 @@
 
 
 ## How to Run ##
-### Run with Python ###
 *This app requires a version of python3.6 to run properly*
 *This app requires Google API keys to function properly*
 
@@ -72,7 +71,7 @@
 
 *If you would like to work as a developer on this project, please open an issue and let us know there*
 
----
+
 
 ## Folder Information ##
 
