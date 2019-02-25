@@ -70,9 +70,7 @@
 	* `./build_and_run.sh`
 
 
-*If you would like to work as a developer on this project, please contact one of the Administrators for this group: 
-	* boxoforanmore, 
-	* lupini-beans*
+*If you would like to work as a developer on this project, please open an issue and let us know there*
 
 ---
 
