@@ -6,8 +6,11 @@
 
 
 ## How to Run ##
-*This app requires a version of python3.6 to run properly*
-*This app requires Google API keys to function properly*
+*Basic Requirements to run this app:*
+* *python3.6*
+* *GoogleAPI keys (more below)*
+* *A Bash style terminal is recommended*
+
 
 1. Set up a virtual environment with:
 	* `python3 -m venv venv`
