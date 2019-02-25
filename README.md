@@ -59,7 +59,7 @@
 
 ### Run on Deployment-level Server (with Docker) ###
 5. Ensure you have a docker client installed and running
-6. Switch `Dockerfile` to the `Dockerfile_deploy`
+6. Switch `Dockerfile` to the `Dockerfile_deploy` file contents
 	* `./switch_to_deploy`
 7. Set your environment variables in `Dockerfile`:
 	* `ENV GOOGLE_SECRET=<your_google_key>`
@@ -70,7 +70,9 @@
 	* `./build_and_run.sh`
 
 
-*If you would like to work as a developer on this project, please contact one of the Administrators for this group: boxoforanmore, lupini-beans*
+*If you would like to work as a developer on this project, please contact one of the Administrators for this group: 
+	* boxoforanmore, 
+	* lupini-beans*
 
 ---
 
@@ -81,7 +83,7 @@ Documentation for the contents of the main folder.
 ### `requirements/` ###
 * Folder of pip dependencies for testing, development, and deployment
 
-### `app/ ###
+### `app/` ###
 * Main application folder for Flask components
 
 ### `Dockerfile` ###
@@ -128,6 +130,7 @@ Documentation for the contents of the main folder.
 * Tests depend on login being present and required
 * Cannot disable login functionality with app or test with OAuth2 as exclusive login currently
 	* Only tests for 401 errors
+
 
 
 
