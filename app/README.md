@@ -61,5 +61,5 @@ These are the main files and folders for PageSage.
 	* If user (email account) already exists in database, login with information from database (create new user if not)
 	* Catch token errors and try login again
 	* Loads the landing page after everything passes
-* logout()
+* `logout()`
 	* Uses `Flask-Login` to logout the current user and return them to the landing page
