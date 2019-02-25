@@ -32,8 +32,7 @@
 	* `flask migrate -m "Your migration message here"`
 	* `flask upgrade` <-- This command may fail occasionally
 
-*Choose your running method from one of the following methods*
-
+### Choose one of the following methods to run the app: ###
 
 ### Run with Python ###
 5. Set your environment variables:
