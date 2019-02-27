@@ -12,20 +12,24 @@ function toggleSidebar() {
     }
 }
 
-
 function bookSearch() {
-    var search = document.getElementById('search').value
-    document.getElementById('results').innerHTML = ""
-    console.log(search)
+    let search = document.getElementById('search').value;
+    document.getElementById('results').innerHTML = "";
+    console.log(search);
+    let maxResults = "40";
+    let orderBy = "relevance";
+    let printType = "books";
+    let projection = "full";
     $.ajax({
-        url: "https://www.googleapis.com/books/v1/volumes?q=" + search +"&key=AIzaSyB9Q2aWWmNUHPG60ZK3RQczqe0mt_TAyHc",
-        dataType: "json",
-        success: function(books) {
-            for (i = 0; i < books.items.length; i++) {
-              results.innerHTML += "<h2>" + books.items[i].volumeInfo.title + "</h2>"
-            }
-            console.log(books)
-        },
-        type: 'GET'
+        url: "https://www.googleapis.com/books/v1/volumes?q=" + search + "&maxResults=" + maxResults + 
+             "&orderBy=" + orderBy + "&printType=" + printType + "&projection=" + projection + 
+             "&key=" + search_api,
+       dataType: "json",
+       type: 'GET',
+       success: function(books) {
+           for (i = 0; i < books.items.length; i++) {
+               results.innerHTML += "<h3>" + books.items[i].volumeInfo.title + "</h3>"
+           }
+       }
     });
 }
