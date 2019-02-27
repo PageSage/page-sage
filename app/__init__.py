@@ -18,7 +18,7 @@ def create_app(object_name=Config):
         scope=[
             "https://www.googleapis.com/auth/userinfo.email",
             "https://www.googleapis.com/auth/userinfo.profile",
-            "https://www.googleapis.com/auth/plus.me"
+            "openid"
         ]
     )
     app.register_blueprint(google_bp, url_prefix="/google-login")
