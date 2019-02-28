@@ -7,6 +7,9 @@ import requests
 from flask_login import login_required, login_user, logout_user, current_user
 from oauthlib.oauth2.rfc6749.errors import InvalidGrantError, TokenExpiredError, OAuth2Error
 from app.models import User, OAuth
+import os
+
+SEARCH_KEY = os.environ.get('SEARCH_KEY')
 
 ###########
 ## Forms ##
@@ -126,7 +129,7 @@ def search():
     if form.validate_on_submit():
         flash('Search requested for {}'.format(form.search_item.data))
         return redirect('/user/search')
-    return render_template('user/search.html', form=form)
+    return render_template('user/search.html', form=form, SEARCH_KEY=SEARCH_KEY)
 
 @app.route('/user/settings', methods=['GET', 'POST'])
 @login_required
@@ -176,7 +179,7 @@ def bookclub_settings():
 def bookclub_search():
     form = SearchForm()
     search_form(form)
-    return render_template('bookclub/search.html', form=form)
+    return render_template('bookclub/search.html', form=form, SEARCH_KEY=SEARCH_KEY)
 
 @app.route('/bookclub/shelf', methods=['GET', 'POST'])
 @app.route('/bookclub/bookshelf')
