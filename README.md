@@ -72,7 +72,7 @@
 	* `ENV SEARCH_KEY=<your_search_key>`
 	* `ENV SECRET_KEY=<your_secret_key>`
 	* It is advised to use a randomized, (at least) 64-bit secret key for this
-	* `OAUTHLIB_INSECURE_TRANSPORT=1` <= If running locally
+	* `ENV OAUTHLIB_INSECURE_TRANSPORT=1` <= If running locally
 8. Run the app:
 	* `./build_and_run.sh`
 
