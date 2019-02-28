@@ -48,6 +48,7 @@ These are the main files and folders for PageSage.
 
 ### `routes.py` ###
 * Holds standard routes for the app
+* Pulls in the API key for search as from environment variables for security
 * All `user` and `bookclub` routes
 	* Require login
 	* Use `form.validate_on_submit()` to allow rerouting to the search page

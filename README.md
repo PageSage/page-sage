@@ -38,8 +38,10 @@
 5. Set your environment variables:
 	* `export GOOGLE_SECRET=<your_google_key>`
 	* `export GOOGLE_CLIENT_ID=<your_client_id>`
+	* `export SEARCH_KEY=<your_search_key>` 
 	* `export SECRET_KEY=<your_secret_key>`
 	* It is advised to use a randomized, (at least) 64-bit secret key for this
+	* `export OAUTHLIB_INSECURE_TRANSPORT=1` <= If running locally
 6. Install the dependencies:
 	* `pip install --upgrade pip && pip install -r requirements.txt`
 7. Run the app:
@@ -52,8 +54,10 @@
 6. Set your environment variables in `Dockerfile`:
 	* `ENV GOOGLE_SECRET=<your_google_key>`
 	* `ENV GOOGLE_CLIENT_ID=<your_client_id>`
+	* `ENV SEARCH_KEY=<your_search_key>`
 	* `ENV SECRET_KEY=<your_secret_key>`
 	* It is advised to use a randomized, (at least) 64-bit secret key for this
+	* `OAUTHLIB_INSECURE_TRANSPORT=1` <= If running locally
 7. Run the app:
 	* `./build_and_run.sh`
 
@@ -65,8 +69,10 @@
 7. Set your environment variables in `Dockerfile`:
 	* `ENV GOOGLE_SECRET=<your_google_key>`
 	* `ENV GOOGLE_CLIENT_ID=<your_client_id>`
+	* `ENV SEARCH_KEY=<your_search_key>`
 	* `ENV SECRET_KEY=<your_secret_key>`
 	* It is advised to use a randomized, (at least) 64-bit secret key for this
+	* `OAUTHLIB_INSECURE_TRANSPORT=1` <= If running locally
 8. Run the app:
 	* `./build_and_run.sh`
 
