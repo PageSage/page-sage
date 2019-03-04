@@ -140,15 +140,7 @@ def logout():
         )
     except (TypeError) as e:
          pass
-
-    token = app.blueprints['facebook'].token['access_token']
-    resp = facebook.post(
-        "https://graph.facebook.com/v3.2/me/revoke",
-        params={"token": token}
-        #headers={"Content-Type": "application/x-www-form-urlencoded"}
-    )
     logout_user()
-    #current_user.is_authenticated = False
     flash("You have logged out")
     return redirect(url_for("index"))
 
