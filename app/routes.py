@@ -3,6 +3,7 @@ from app import app, db
 from app.forms import SearchForm
 from flask_dance.consumer import oauth_authorized
 from flask_dance.contrib.google import google
+from flask_dance.contrib.facebook import facebook
 import requests
 from flask_login import login_required, login_user, logout_user, current_user
 from oauthlib.oauth2.rfc6749.errors import InvalidGrantError, TokenExpiredError, OAuth2Error
@@ -79,7 +80,34 @@ def google_login():
             return redirect(url_for('profile'))
     except (InvalidGrantError, TokenExpiredError) as e:
         return redirect(url_for("google.login"))
-    return render_template('landing/welcome.html')
+    return redirect(url_for('profile'))
+
+@app.route('/facebook-login', methods=['GET', 'POST'])
+def facebook_login():
+    if current_user.is_authenticated:
+        return redirect(url_for('profile'))
+    if not facebook.authorized:
+        return redirect(url_for('facebook.login'))
+    try:
+        account_info = facebook.get('/v3.2/dialog/oauth')
+        if not account_info.ok:
+            with open("errorlog.log", "a+") as cricket:
+                cricket.write(str(account_info) + "\n")
+        if account_info.ok:
+            account_info_json = account_info.json()
+            email = account_info_json["email"]
+            f_name = account_info_json["given_name"]
+            user = User.query.filter_by(email=email).first()
+            if user is None:
+                user = User(email=email, f_name=f_name)
+                db.session.add(user)
+                db.session.commit()
+            login_user(user)
+            flash("Signed in with Facebook")
+            return redirect(url_for('profile'))
+    except (InvalidGrantError, TokenExpiredError) as e:
+        return redirect(url_for('facebook.login'))
+    return redirect(url_for('profile'))
 
 @app.route('/signup')
 def signup():
