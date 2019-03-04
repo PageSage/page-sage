@@ -98,6 +98,7 @@ def facebook_login():
             account_info_json = account_info.json()
             email = account_info_json["email"]
             f_name = account_info_json["first_name"]
+            #login_method = "google"
             user = User.query.filter_by(email=email).first()
             if user is None:
                 user = User(email=email, f_name=f_name)
@@ -118,28 +119,34 @@ def signup():
 @app.route('/logout', methods=['GET', 'POST'])
 @login_required
 def logout():
-    '''
-    if current_user.login_method == "google":
-        token = google_bp.token['access_token']
+    #if current_user.login_method == "google":
+    #    token = app.blueprints['google'].token['access_token']
+    #    resp = google.post(
+    #        "https://accounts.google.com/o/oauth2/revoke",
+    #        params={"token": token},
+    #        headers={"Content-Type": "application/x-www-form-urlencoded"}
+    #    )
+    #    assert resp.ok, resp.text
+    #elif current_user.login_method == "facebook":
+    #    pass
+    #with open('greenbook.log', 'a+') as filo:
+    #    filo.write(current_user.login_method)
+    try:
+        token = app.blueprints['google'].token['access_token']
         resp = google.post(
             "https://accounts.google.com/o/oauth2/revoke",
             params={"token": token},
             headers={"Content-Type": "application/x-www-form-urlencoded"}
         )
-        assert resp.ok, resp.text
-    elif current_user.login_method == "facebook":
-        pass
-    with open('greenbook.log', 'a+') as filo:
-        filo.write(current_user.login_method)'''
-    '''
-    token = google_bp.token['access_token']
-    resp = google.post(
-        "https://accounts.google.com/o/oauth2/revoke",
-        params={"token": token},
-        headers={"Content-Type": "application/x-www-form-urlencoded"}
+    except (TypeError) as e:
+         pass
+
+    token = app.blueprints['facebook'].token['access_token']
+    resp = facebook.post(
+        "https://graph.facebook.com/v3.2/me/revoke",
+        params={"token": token}
+        #headers={"Content-Type": "application/x-www-form-urlencoded"}
     )
-    assert resp.ok, resp.text
-    '''
     logout_user()
     #current_user.is_authenticated = False
     flash("You have logged out")
