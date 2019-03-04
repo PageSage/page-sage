@@ -89,14 +89,14 @@ def facebook_login():
     if not facebook.authorized:
         return redirect(url_for('facebook.login'))
     try:
-        account_info = facebook.get('/v3.2/dialog/oauth')
-        if not account_info.ok:
+        account_info = facebook.get('me?fields=id,first_name,email')
+        if account_info.ok:
             with open("errorlog.log", "a+") as cricket:
                 cricket.write(str(account_info) + "\n")
         if account_info.ok:
             account_info_json = account_info.json()
             email = account_info_json["email"]
-            f_name = account_info_json["given_name"]
+            f_name = account_info_json["first_name"]
             user = User.query.filter_by(email=email).first()
             if user is None:
                 user = User(email=email, f_name=f_name)

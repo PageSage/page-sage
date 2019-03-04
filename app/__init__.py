@@ -20,12 +20,15 @@ def create_app(object_name=Config):
             "https://www.googleapis.com/auth/userinfo.email",
             "https://www.googleapis.com/auth/userinfo.profile",
             "openid"
-        ]
+        ],
+        redirect_to='google_login'
+
     )
     facebook_bp = make_facebook_blueprint(
         client_id=os.environ.get('FACEBOOK_CLIENT_ID'),
-        client_secret=os.environ.get('FACEBOOK_SECRET') 
-        #scope=["id", "first_name", "email"]
+        client_secret=os.environ.get('FACEBOOK_SECRET'),
+        scope=["public_profile", "email"],
+        redirect_to='facebook_login'
     )
     app.register_blueprint(google_bp, url_prefix="/google-login")
     app.register_blueprint(facebook_bp, url_prefix='/facebook-login')
