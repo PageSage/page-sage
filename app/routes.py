@@ -5,7 +5,7 @@ from flask_dance.consumer import oauth_authorized
 from flask_dance.contrib.google import google
 from flask_dance.contrib.facebook import facebook
 import requests
-from flask_login import login_required, login_user, logout_user, current_user
+from flask_login import login_required, login_user, logout_user, current_user, login_manager
 from oauthlib.oauth2.rfc6749.errors import InvalidGrantError, TokenExpiredError, OAuth2Error
 from app.models import User, OAuth
 import os
@@ -60,7 +60,7 @@ def login():
 
 @app.route('/google-login', methods=['GET', 'POST'])
 def google_login():
-    if current_user.is_authenticated:
+    if current_user.is_authenticated and google.authorized:
         return redirect(url_for('profile'))
     if not google.authorized:
         return redirect(url_for('google.login'))
@@ -76,6 +76,7 @@ def google_login():
                 db.session.add(user)
                 db.session.commit()
             login_user(user)
+            current_user.login_method = "google"
             flash("Signed in with Google")
             return redirect(url_for('profile'))
     except (InvalidGrantError, TokenExpiredError) as e:
@@ -84,7 +85,7 @@ def google_login():
 
 @app.route('/facebook-login', methods=['GET', 'POST'])
 def facebook_login():
-    if current_user.is_authenticated:
+    if current_user.is_authenticated and facebook.authorized:
         return redirect(url_for('profile'))
     if not facebook.authorized:
         return redirect(url_for('facebook.login'))
@@ -103,6 +104,7 @@ def facebook_login():
                 db.session.add(user)
                 db.session.commit()
             login_user(user)
+            current_user.login_method = "facebook"
             flash("Signed in with Facebook")
             return redirect(url_for('profile'))
     except (InvalidGrantError, TokenExpiredError) as e:
@@ -113,10 +115,33 @@ def facebook_login():
 def signup():
     return render_template('authn/signup.html')
 
-@app.route('/logout')
+@app.route('/logout', methods=['GET', 'POST'])
 @login_required
 def logout():
+    '''
+    if current_user.login_method == "google":
+        token = google_bp.token['access_token']
+        resp = google.post(
+            "https://accounts.google.com/o/oauth2/revoke",
+            params={"token": token},
+            headers={"Content-Type": "application/x-www-form-urlencoded"}
+        )
+        assert resp.ok, resp.text
+    elif current_user.login_method == "facebook":
+        pass
+    with open('greenbook.log', 'a+') as filo:
+        filo.write(current_user.login_method)'''
+    '''
+    token = google_bp.token['access_token']
+    resp = google.post(
+        "https://accounts.google.com/o/oauth2/revoke",
+        params={"token": token},
+        headers={"Content-Type": "application/x-www-form-urlencoded"}
+    )
+    assert resp.ok, resp.text
+    '''
     logout_user()
+    #current_user.is_authenticated = False
     flash("You have logged out")
     return redirect(url_for("index"))
 
