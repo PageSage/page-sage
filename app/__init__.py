@@ -2,6 +2,7 @@ from flask import Flask, url_for
 from config import Config
 from flask_dance.contrib.google import make_google_blueprint, google
 from flask_dance.contrib.facebook import make_facebook_blueprint, facebook
+from flask_dance.contrib.discord import make_discord_blueprint, discord
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
@@ -30,8 +31,15 @@ def create_app(object_name=Config):
         scope=["public_profile", "email"],
         redirect_to='facebook_login'
     )
-    app.register_blueprint(google_bp, url_prefix="/google-login")
+    discord_bp = make_discord_blueprint(
+        client_id=os.environ.get('DISCORD_CLIENT_ID'),
+        client_secret=os.environ.get('DISCORD_SECRET'),
+        scope=["email"],
+        redirect_to='discord_login'
+    )
+    app.register_blueprint(google_bp, url_prefix='/google-login')
     app.register_blueprint(facebook_bp, url_prefix='/facebook-login')
+    app.register_blueprint(discord_bp, url_prefix='/discord-login')
     db.init_app(app)
     login_manager.init_app(app)
     migrate = Migrate(app, db)
