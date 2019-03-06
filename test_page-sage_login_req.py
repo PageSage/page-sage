@@ -79,6 +79,10 @@ class BasicRouteTests(unittest.TestCase):
         response = self.app.get('/facebook-login')
         self.assertEqual(response.status_code, 302)
 
+    def test_discord_login(self):
+        response = self.app.get('/discord-login')
+        self.assertEqual(response.status_code, 302)
+
     #################
     ## User Routes ##
     #################
