@@ -1,5 +1,6 @@
 const sidebar = $('#sidebar-bg').get(0);
 const main = $('#main').get(0);
+const searchItem = $('#search').get(0);
 
 function toggleSidebar() {
     if (sidebar.style.display === "none") {
@@ -12,8 +13,28 @@ function toggleSidebar() {
     }
 }
 
+function toggleSmallSidebar() {
+    if (sidebar.style.display === "none") {
+        sidebar.style.width="20%"
+        main.style.marginLeft="0%"
+        sidebar.style.display = "block";
+    } else {
+        sidebar.style.display = "none";
+    }
+}
+
+function hideStyle() {
+    searchItem.style.backgroundImage="none";
+}
+
+function searchFull() {
+    if (searchItem.value != null) {
+        searchItem.style.backgroundImage="none";
+    }
+}
+
 function bookSearch() {
-    let search = document.getElementById('search').value;
+    let search = searchItem.value;
     document.getElementById('results').innerHTML = "";
     console.log(search);
     let maxResults = "40";
@@ -33,3 +54,5 @@ function bookSearch() {
        }
     });
 }
+
+window.onload()=searchFull();

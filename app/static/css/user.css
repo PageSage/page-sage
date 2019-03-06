@@ -1,6 +1,5 @@
 #header-bg {
-  background-color: #C0CDAD;
-  /* background-image: radial-gradient(#4A744C, #2B5B2E, #034107) */
+  background-color: #AFB99F;
 }
 
 body, html {
@@ -19,13 +18,8 @@ body, html {
   font-size: 24px; 
 }
 
-#main {
-  margin-left: 12%;
-}
-
 .main-scheme {
   background-color: #FFFFFF;
-  /* background-image: linear-gradient(to bottom right, #CDC0AD, #FAF9F8); */
   color: #000000;
 }
  .main-scheme a {
@@ -38,8 +32,19 @@ body, html {
   height: 25%;
  }
 
-.sidebar {
+ #green-bg {
   background-color: #C0CDAD;
+ }
+
+ .search-bar {
+  background: white; 
+  background-image: url(https://developers.google.com/books/images/google_watermark.gif); 
+  background-size: 100px 33px; 
+  background-repeat: no-repeat;
+ }
+
+.sidebar {
+  background-color: #AFB99F;
   width: 12%;
 }
 
