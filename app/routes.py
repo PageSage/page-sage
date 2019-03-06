@@ -4,6 +4,7 @@ from app.forms import SearchForm
 from flask_dance.consumer import oauth_authorized
 from flask_dance.contrib.google import google
 from flask_dance.contrib.facebook import facebook
+from flask_dance.contrib.discord import discord
 import requests
 from flask_login import login_required, login_user, logout_user, current_user, login_manager
 from oauthlib.oauth2.rfc6749.errors import InvalidGrantError, TokenExpiredError, OAuth2Error
@@ -92,13 +93,9 @@ def facebook_login():
     try:
         account_info = facebook.get('me?fields=id,first_name,email')
         if account_info.ok:
-            with open("errorlog.log", "a+") as cricket:
-                cricket.write(str(account_info) + "\n")
-        if account_info.ok:
             account_info_json = account_info.json()
             email = account_info_json["email"]
             f_name = account_info_json["first_name"]
-            #login_method = "google"
             user = User.query.filter_by(email=email).first()
             if user is None:
                 user = User(email=email, f_name=f_name)
@@ -112,6 +109,31 @@ def facebook_login():
         return redirect(url_for('facebook.login'))
     return redirect(url_for('profile'))
 
+@app.route('/discord-login', methods=['GET', 'POST'])
+def discord_login():
+    if current_user.is_authenticated and discord.authorized:
+        return redirect(url_for('profile'))
+    if not discord.authorized:
+        return redirect(url_for('discord.login'))
+    try:
+        account_info = discord.get("api/v6/users/@me")
+        if account_info.ok:
+            account_info_json = account_info.json()
+            email = account_info_json["email"]
+            username = account_info_json["username"]
+            user = User.query.filter_by(email=email).first()
+            if user is None:
+                user = User(email=email, f_name=username)
+                db.session.add(user)
+                db.session.commit()
+            login_user(user)
+            flash("Signed in with Discord")
+            return redirect(url_for('profile'))
+    except (InvalidGrantError, TokenExpiredError) as e:
+        return redirect(url_for('discord.login'))
+    return redirect(url_for('profile'))
+
+
 @app.route('/signup')
 def signup():
     return render_template('authn/signup.html')
@@ -119,18 +141,6 @@ def signup():
 @app.route('/logout', methods=['GET', 'POST'])
 @login_required
 def logout():
-    #if current_user.login_method == "google":
-    #    token = app.blueprints['google'].token['access_token']
-    #    resp = google.post(
-    #        "https://accounts.google.com/o/oauth2/revoke",
-    #        params={"token": token},
-    #        headers={"Content-Type": "application/x-www-form-urlencoded"}
-    #    )
-    #    assert resp.ok, resp.text
-    #elif current_user.login_method == "facebook":
-    #    pass
-    #with open('greenbook.log', 'a+') as filo:
-    #    filo.write(current_user.login_method)
     try:
         token = app.blueprints['google'].token['access_token']
         resp = google.post(
