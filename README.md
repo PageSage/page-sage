@@ -26,8 +26,16 @@
 	* Choose webapp
 	* Your "Authorized JavaScript origins" should be: `http://localhost:5000`
 	* Your "Authorized redirect URIs" should be: `http://localhost:5000/google-login/google/authorized`
+	* Obtain an API key for Google Books Search API
 	* *Please remember to never publish your Client ID or any active API keys on a public platform*
-4. Set up the database:
+4. Set up Facebook for Developers:
+	* Navigate to [Facebook for Developers](https://developers.facebook.com)
+	* Set up a new application
+	* Set up a test version of that application
+	* Add Facebook Login
+	* All redirects will be valid here
+	* *Please remember to never publish your Client ID or any active API keys on a public platform*
+5. Set up the database:
 	* `flask init db`
 	* `flask migrate -m "Your migration message here"`
 	* `flask upgrade` <-- This command may fail occasionally
@@ -35,45 +43,51 @@
 ### Choose one of the following methods to run the app: ###
 
 ### Run with Python ###
-5. Set your environment variables:
+6. Set your environment variables:
 	* `export GOOGLE_SECRET=<your_google_key>`
 	* `export GOOGLE_CLIENT_ID=<your_client_id>`
+	* `export FACEBOOK_SECRET=<your_facebook_key`
+	* `export FACEBOOK_CLIENT_ID=<your_client_id>`
 	* `export SEARCH_KEY=<your_search_key>` 
 	* `export SECRET_KEY=<your_secret_key>`
 	* It is advised to use a randomized, (at least) 64-bit secret key for this
 	* `export OAUTHLIB_INSECURE_TRANSPORT=1` <= If running locally
-6. Install the dependencies:
+7. Install the dependencies:
 	* `pip install --upgrade pip && pip install -r requirements.txt`
-7. Run the app:
+8. Run the app:
 	* `python3 page-sage.py`
 	* Close the app with `Ctrl + C`
 
 
 ### Run with Docker ###
-5. Ensure you have a docker client installed and running
-6. Set your environment variables in `Dockerfile`:
+6. Ensure you have a docker client installed and running
+7. Set your environment variables in `Dockerfile`:
 	* `ENV GOOGLE_SECRET=<your_google_key>`
 	* `ENV GOOGLE_CLIENT_ID=<your_client_id>`
+	* `ENV FACEBOOK_SECRET=<your_facebook_key`
+	* `ENV FACEBOOK_CLIENT_ID=<your_client_id>`
 	* `ENV SEARCH_KEY=<your_search_key>`
 	* `ENV SECRET_KEY=<your_secret_key>`
 	* It is advised to use a randomized, (at least) 64-bit secret key for this
 	* `OAUTHLIB_INSECURE_TRANSPORT=1` <= If running locally
-7. Run the app:
+8. Run the app:
 	* `./build_and_run.sh`
 
 
 ### Run on Deployment-level Server (with Docker) ###
-5. Ensure you have a docker client installed and running
-6. Switch `Dockerfile` to the `Dockerfile_deploy` file contents
+6. Ensure you have a docker client installed and running
+7. Switch `Dockerfile` to the `Dockerfile_deploy` file contents
 	* `./switch_to_deploy`
-7. Set your environment variables in `Dockerfile`:
+8. Set your environment variables in `Dockerfile`:
 	* `ENV GOOGLE_SECRET=<your_google_key>`
 	* `ENV GOOGLE_CLIENT_ID=<your_client_id>`
+	* `ENV FACEBOOK_SECRET=<your_facebook_key`
+	* `ENV FACEBOOK_CLIENT_ID=<your_client_id>`
 	* `ENV SEARCH_KEY=<your_search_key>`
 	* `ENV SECRET_KEY=<your_secret_key>`
 	* It is advised to use a randomized, (at least) 64-bit secret key for this
 	* `ENV OAUTHLIB_INSECURE_TRANSPORT=1` <= If running locally
-8. Run the app:
+9. Run the app:
 	* `./build_and_run.sh`
 
 
