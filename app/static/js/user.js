@@ -1,6 +1,9 @@
 const sidebar = $('#sidebar-bg').get(0);
 const main = $('#main').get(0);
 const searchItem = $('#search').get(0);
+const searchItemSmall = $('#search-small').get(0);
+const searchForm = $('#search-form-header').get(0);
+const mainSearch = $('#main-search').get(0);
 
 function toggleSidebar() {
     if (sidebar.style.display === "none") {
@@ -27,10 +30,8 @@ function hideStyle() {
     searchItem.style.backgroundImage="none";
 }
 
-function searchFull() {
-    if (searchItem.value != null) {
-        searchItem.style.backgroundImage="none";
-    }
+function clearSearch() {
+    searchItem.value="";
 }
 
 function bookSearch() {
@@ -49,10 +50,8 @@ function bookSearch() {
        type: 'GET',
        success: function(books) {
            for (i = 0; i < books.items.length; i++) {
-               results.innerHTML += "<h3>" + books.items[i].volumeInfo.title + "</h3>"
+               results.innerHTML += "<p>" + books.items[i].volumeInfo.title + "</p>"
            }
        }
     });
 }
-
-window.onload()=searchFull();

@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-    <link rel='stylesheet' href="{{ url_for('static', filename='./css/user.css') }}">
+    <link rel='stylesheet' href="{{ url_for('static', filename='./css/general.css') }}">
 </head>
 
 
@@ -89,14 +89,14 @@
                 <a href="{{ url_for('index') }}" class="w3-bar-item w3-right w3-button bg-transparent w3-padding-large w3-hover-white w3-large text-dark" title="User Page">
                     <i class="fas fa-sign-out-alt"></i>
                 </a>
-                <!-- <a href="{{ url_for('search') }}" class="w3-hide-medium w3-hide-large w3-bar-item w3-right w3-button bg-transparent w3-padding-large w3-hover-white w3-large text-dark" title="search">
+                <a href="{{ url_for('search') }}" class="w3-hide-medium w3-hide-large w3-bar-item w3-right w3-button bg-transparent w3-padding-large w3-hover-white w3-large text-dark" title="search">
                     <i class="fas fa-search"></i>
-                </a> -->
-                <div class="w3-hide-small w3-bar-item py-2 w3-right">
+                </a>
+                <div id="search-form-header" class="w3-hide-small w3-bar-item py-2 w3-right">
                     <form action="{{ url_for('search') }}" method="post" novalidate>
                         <div class="form-inline">
-                            {{ form.search_item(size=32, id="search", class_="form-control mr-sm-2 mt-2 mt-md-0 pl-3 search-bar", onclick="hideStyle()") }}
-                            {{ form.search(class_="btn btn-outline-dark text-dark my-2 my-sm-0 search-button") }}
+                            {{ form.search_item(size=32, id="search", class_="form-control mr-sm-2 mt-2 mt-md-0 pl-3 search-bar", style="width: 200px;", onclick="hideStyle()") }}
+                            {{ form.search(class_="btn btn-outline-dark text-dark my-2 my-sm-0 search-button search-icon") }}
                         </div>
                     </form>
                 </div>
