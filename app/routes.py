@@ -3,10 +3,14 @@ from app import app, db
 from app.forms import SearchForm
 from flask_dance.consumer import oauth_authorized
 from flask_dance.contrib.google import google
+from flask_dance.contrib.facebook import facebook
 import requests
-from flask_login import login_required, login_user, logout_user, current_user
+from flask_login import login_required, login_user, logout_user, current_user, login_manager
 from oauthlib.oauth2.rfc6749.errors import InvalidGrantError, TokenExpiredError, OAuth2Error
 from app.models import User, OAuth
+import os
+
+SEARCH_KEY = os.environ.get('SEARCH_KEY')
 
 ###########
 ## Forms ##
@@ -56,7 +60,7 @@ def login():
 
 @app.route('/google-login', methods=['GET', 'POST'])
 def google_login():
-    if current_user.is_authenticated:
+    if current_user.is_authenticated and google.authorized:
         return redirect(url_for('profile'))
     if not google.authorized:
         return redirect(url_for('google.login'))
@@ -72,19 +76,70 @@ def google_login():
                 db.session.add(user)
                 db.session.commit()
             login_user(user)
+            current_user.login_method = "google"
             flash("Signed in with Google")
             return redirect(url_for('profile'))
     except (InvalidGrantError, TokenExpiredError) as e:
         return redirect(url_for("google.login"))
-    return render_template('landing/welcome.html')
+    return redirect(url_for('profile'))
+
+@app.route('/facebook-login', methods=['GET', 'POST'])
+def facebook_login():
+    if current_user.is_authenticated and facebook.authorized:
+        return redirect(url_for('profile'))
+    if not facebook.authorized:
+        return redirect(url_for('facebook.login'))
+    try:
+        account_info = facebook.get('me?fields=id,first_name,email')
+        if account_info.ok:
+            with open("errorlog.log", "a+") as cricket:
+                cricket.write(str(account_info) + "\n")
+        if account_info.ok:
+            account_info_json = account_info.json()
+            email = account_info_json["email"]
+            f_name = account_info_json["first_name"]
+            #login_method = "google"
+            user = User.query.filter_by(email=email).first()
+            if user is None:
+                user = User(email=email, f_name=f_name)
+                db.session.add(user)
+                db.session.commit()
+            login_user(user)
+            current_user.login_method = "facebook"
+            flash("Signed in with Facebook")
+            return redirect(url_for('profile'))
+    except (InvalidGrantError, TokenExpiredError) as e:
+        return redirect(url_for('facebook.login'))
+    return redirect(url_for('profile'))
 
 @app.route('/signup')
 def signup():
     return render_template('authn/signup.html')
 
-@app.route('/logout')
+@app.route('/logout', methods=['GET', 'POST'])
 @login_required
 def logout():
+    #if current_user.login_method == "google":
+    #    token = app.blueprints['google'].token['access_token']
+    #    resp = google.post(
+    #        "https://accounts.google.com/o/oauth2/revoke",
+    #        params={"token": token},
+    #        headers={"Content-Type": "application/x-www-form-urlencoded"}
+    #    )
+    #    assert resp.ok, resp.text
+    #elif current_user.login_method == "facebook":
+    #    pass
+    #with open('greenbook.log', 'a+') as filo:
+    #    filo.write(current_user.login_method)
+    try:
+        token = app.blueprints['google'].token['access_token']
+        resp = google.post(
+            "https://accounts.google.com/o/oauth2/revoke",
+            params={"token": token},
+            headers={"Content-Type": "application/x-www-form-urlencoded"}
+        )
+    except (TypeError) as e:
+         pass
     logout_user()
     flash("You have logged out")
     return redirect(url_for("index"))
@@ -126,7 +181,7 @@ def search():
     if form.validate_on_submit():
         flash('Search requested for {}'.format(form.search_item.data))
         return redirect('/user/search')
-    return render_template('user/search.html', form=form)
+    return render_template('user/search.html', form=form, SEARCH_KEY=SEARCH_KEY)
 
 @app.route('/user/settings', methods=['GET', 'POST'])
 @login_required
@@ -176,7 +231,7 @@ def bookclub_settings():
 def bookclub_search():
     form = SearchForm()
     search_form(form)
-    return render_template('bookclub/search.html', form=form)
+    return render_template('bookclub/search.html', form=form, SEARCH_KEY=SEARCH_KEY)
 
 @app.route('/bookclub/shelf', methods=['GET', 'POST'])
 @app.route('/bookclub/bookshelf')
