@@ -119,7 +119,7 @@ def pre_book():
 ## Book should appear as /user/<book>
 ## passed in bookinfo which contains book volumeinfo
 ## Should book be moved to a more general page?
-@app.route('/user/book/')
+@app.route('/user/book')
 @app.route('/user/<string:volumeid>', methods=['GET', 'POST'])
 @login_required
 def user_book(volumeid):
