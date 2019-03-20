@@ -29,9 +29,9 @@ function bookSearch() {
     success: function(books) {
       for (i = 0; i < books.items.length; i++) {
         let volume_id = books.items[i].id;
-        results.innerHTML +=  "<input type = 'radio' name='book' value = "+volume_id+">"+books.items[i].volumeInfo.title + "<br>";
+        results.innerHTML +=  "<input type='submit' name='book' value=" + volume_id + ">" + books.items[i].volumeInfo.title + "</input>" + "</br>";
       }
-      results.innerHTML += "<input type='submit' value='book Choice'>"
+      //results.innerHTML += "<input type='submit' value='book Choice'>"
     }
   });
 

@@ -126,7 +126,7 @@ def user_book(volumeid):
     try:
         form = SearchForm()
         search_form(form)
-        return render_template('user/book.html',form = form)
+        return render_template('user/book.html',form=form)
     except Exception as e:
         return (str(e))
 
