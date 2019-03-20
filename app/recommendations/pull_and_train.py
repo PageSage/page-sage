@@ -27,15 +27,55 @@ def pull_books(book_list):
         url = baseURL + volume['id'] + endURL
         book_info = requests.get(url, params=headers).json()
         print(book_info)
+        print()
+        new_book = {}
+        new_book['rating'] = volume['rating']
+
+        ## Replacement/Default Values for non-existent information in JSON
+        try:
+            page_count = int(book_info['volumeInfo']['pageCount'])
+        except (KeyError):
+            page_count = 100
+
+        try:
+            categories = category_preprocessor(book_info['volumeInfo']['categories'])
+        except (KeyError):
+            categories = category_preprocessor(['Fiction'])
+
+        try:
+            average_rating = float(book_info['volumeInfo']['averageRating'])
+        except (KeyError):
+            average_rating = float(3.5)
+
+        try:
+            ratings_count = book_info['volumeInfo']['ratingsCount']
+        except (KeyError):
+            ratings_count = float(0)
+
+        try:
+            maturity_rating = book_info['volumeInfo']['maturityRating']
+        except (KeyError):
+            maturity_rating = 'NOT_MATURE'
+
+        try:
+            description = text_preprocessor(book_info['volumeInfo']['description'])
+        except (KeyError):
+            cats = ""
+            for cat in categories:
+                cats += cat + " "
+            #description = text_preprocessor(book_info['volumeInfo']['title'] + " " str(categories))
+            description = text_preprocessor(cats)
+
         book_data.append({
             'rating'         : volume['rating'],
-            'page_count'     : book_info['volumeInfo']['pageCount'],
-            'categories'     : np.array(category_preprocessor(book_info['volumeInfo']['categories'])),
-            'average_rating' : book_info['volumeInfo']['averageRating'],
-            'ratings_count'  : book_info['volumeInfo']['ratingsCount'],
-            'maturity_rating': book_info['volumeInfo']['maturityRating'],
-            'description'    : text_preprocessor(book_info['volumeInfo']['description'])
+            'page_count'     : page_count,
+            'categories'     : categories,
+            'average_rating' : average_rating,
+            'ratings_count'  : ratings_count,
+            'maturity_rating': maturity_rating,
+            'description'    : description
         })
+        
     return book_data
 
 def text_preprocessor(text):
@@ -60,8 +100,9 @@ def make_processable(books):
         book_data = []
         for item in book:
             book_data.append(book[item])
+        print(book_data)
         data.append(book_data)
-    return np.array(data)
+    return data
 
 def gen_labels(books):
     labels = []
@@ -93,10 +134,10 @@ if __name__ == '__main__':
                 items = line.split('  ')
                 new_volume = {'id': items[0], 'rating': items[1].strip()}
                 test_volumes.append(new_volume)
-                print(test_volumes)
         print("Made it here")
         test = pull_books(test_volumes)
         data = make_processable(test)
-        labels = gen_labels(tet)
+        labels = gen_labels(test)
         print(labels)
         print(data)
+        file_num += 1
