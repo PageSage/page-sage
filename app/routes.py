@@ -98,7 +98,7 @@ def logout():
 
 ## All user routes should eventually be modified to have dynamic links
 ## such that the urls are /<username>/profile, etc.
-@app.route('/user/')
+@app.route('/user')
 @app.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
@@ -123,7 +123,6 @@ def pre_book():
 @app.route('/user/<string:volumeid>', methods=['GET', 'POST'])
 @login_required
 def user_book(volumeid):
-    #volumeid = volumeid.split('=',1)[1]
     try:
         form = SearchForm()
         search_form(form)
