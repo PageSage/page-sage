@@ -1,4 +1,5 @@
 const sidebar = $('#sidebar-bg').get(0);
+const smallSidebar = $('#sidebar').get(0)
 const main = $('#main').get(0);
 const searchItem = $('#search').get(0);
 const searchItemSmall = $('#search-small').get(0);
@@ -7,8 +8,8 @@ const mainSearch = $('#main-search').get(0);
 
 function toggleSidebar() {
     if (sidebar.style.display === "none") {
-        main.style.marginLeft="12%";
-        sidebar.style.width="12%";
+        main.style.marginLeft="250px";
+        sidebar.style.width="250px";
         sidebar.style.display = "block";
     } else {
         main.style.marginLeft="0%";
@@ -17,12 +18,12 @@ function toggleSidebar() {
 }
 
 function toggleSmallSidebar() {
-    if (sidebar.style.display === "none") {
-        sidebar.style.width="20%"
+    if (smallSidebar.style.display === "none") {
+        smallSidebar.style.width="66%"
         main.style.marginLeft="0%"
-        sidebar.style.display = "block";
+        smallSidebar.style.display = "block";
     } else {
-        sidebar.style.display = "none";
+        smallSidebar.style.display = "none";
     }
 }
 
