@@ -173,7 +173,7 @@ def pre_book():
 @app.route('/user/book')
 @app.route('/user/<string:volumeid>', methods=['GET', 'POST'])
 @login_required
-def user_book(volumeid):
+def user_book(volumeid='lasthere'):
     try:
         form = SearchForm()
         search_form(form)
