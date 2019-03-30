@@ -44,14 +44,15 @@ function bookSearch() {
     let printType = "books";
     let projection = "full";
     $.ajax({
-        url: "https://www.googleapis.com/books/v1/volumes?q=" + search + "&maxResults=" + maxResults + 
-             "&orderBy=" + orderBy + "&printType=" + printType + "&projection=" + projection + 
+        url: "https://www.googleapis.com/books/v1/volumes?q=" + search + "&maxResults=" + maxResults +
+             "&orderBy=" + orderBy + "&printType=" + printType + "&projection=" + projection +
              "&key=" + search_api,
        dataType: "json",
        type: 'GET',
        success: function(books) {
            for (i = 0; i < books.items.length; i++) {
-               results.innerHTML += "<p>" + books.items[i].volumeInfo.title + "</p>"
+             let volume_id = books.items[i].id;
+             results.innerHTML +=  "<input type='submit' name='book' value=" + volume_id + ">" + books.items[i].volumeInfo.title + "</input>" + "</br>";
            }
        }
     });

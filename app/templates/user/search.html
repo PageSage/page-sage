@@ -1,38 +1,39 @@
 {% extends "user/header.html" %}
 
 {% block content %}
-    <div id="green-bg" class="w3-display-container w3-hide-large w3-hide-medium shadow" style="display: block; height: 250px">
-        <div class="w3-display-middle">
+<div id="green-bg" class="w3-display-container w3-hide-large w3-hide-medium shadow" style="display: block; height: 250px">
+  <div class="w3-display-middle">
 
-            <div class="w3-bar w3-white w3-card w3-round" style="width: 290px">
-                <div class="w3-bar-item w3-bar-block w3-card w3-center">
-                    <a class="w3-bar-item w3-white w3-button bg-transparent w3-padding w3-hover-white w3-large">
-                        <form action="{{ url_for('search') }}" method="post" novalidate>
-                            <div class="form-inline">
-                                {{ form.search_item(size=50, id="search", class_="form-control mr-sm-2 mt-2 mt-md-0 search-bar w3-center", style="width: 68%;", onclick="hideStyle()") }}
-                                {{ form.search(class_="btn w3-border w3-text-grey search-button", style="margin-top: 8px; width: 32%") }}
-                            </div>
-                        </form> 
-                    </a>
-                </div>
+    <div class="w3-bar w3-white w3-card w3-round" style="width: 290px">
+      <div class="w3-bar-item w3-bar-block w3-card w3-center">
+        <a class="w3-bar-item w3-white w3-button bg-transparent w3-padding w3-hover-white w3-large">
+          <form action="{{ url_for('search') }}" method="post" novalidate>
+            <div class="form-inline">
+              {{ form.search_item(size=50, id="search", class_="form-control mr-sm-2 mt-2 mt-md-0 search-bar w3-center", style="width: 68%;", onclick="hideStyle()") }}
+              {{ form.search(class_="btn w3-border w3-text-grey search-button", style="margin-top: 8px; width: 32%") }}
             </div>
-
-
-        </div>
-    </div>
-
-    <div class="w3-display-container shadow w3-light-grey w3-padding-64 shadow">
-        <h3>Results:</h3>
-        <p id="results" style="color:black;"></p>
+          </form>
+        </a>
+      </div>
     </div>
 
 
-    <script>
-       var search_api = '{{ SEARCH_KEY }}';
+  </div>
+</div>
 
-       window.onload = function() {
-            bookSearch();
-            clearSearch();
-       }
-    </script>
+<div class="w3-display-container shadow w3-light-grey w3-padding-64 shadow">
+  <form action="{{ url_for('pre_book') }}" method="POST">
+    <p id="results" style="color:black;"></p>
+  </form>
+</div>
+
+
+<script>
+  var search_api = '{{ SEARCH_KEY }}';
+
+  window.onload = function() {
+    bookSearch();
+    clearSearch();
+  }
+</script>
 {% endblock %}

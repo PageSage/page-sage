@@ -1,4 +1,4 @@
-from flask import render_template, session, abort, redirect, url_for, flash
+from flask import render_template, session, abort, redirect, url_for, flash, request
 from app import app, db
 from app.forms import SearchForm
 from flask_dance.consumer import oauth_authorized
@@ -56,7 +56,7 @@ def privacy():
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('profile'))
-    return render_template('authn/choose-login.html') 
+    return render_template('authn/choose-login.html')
 
 @app.route('/google-login', methods=['GET', 'POST'])
 def google_login():
@@ -158,14 +158,28 @@ def profile():
     search_form(form)
     return render_template('user/profile.html', form=form)
 
-## Book should appear as /user/<book>
-## Should book be moved to a more general page?
-@app.route('/user/book', methods=['GET', 'POST'])
+#get book to show up nicely in the url
+@app.route('/user/prebook', methods=['GET','POST'])
 @login_required
-def user_book():
-    form = SearchForm()
-    search_form(form)
-    return render_template('user/book.html', form=form)
+def pre_book():
+    if request.method == 'POST':
+        result=request.form['book']
+        volumeid = result.split("=")
+        return redirect(url_for('user_book',volumeid=result))
+
+## Book should appear as /user/<book>
+## passed in bookinfo which contains book volumeinfo
+## Should book be moved to a more general page?
+@app.route('/user/book')
+@app.route('/user/<string:volumeid>', methods=['GET', 'POST'])
+@login_required
+def user_book(volumeid):
+    try:
+        form = SearchForm()
+        search_form(form)
+        return render_template('user/book.html',form=form)
+    except Exception as e:
+        return (str(e))
 
 @app.route('/my-shelf', methods=['GET', 'POST'])
 @login_required
