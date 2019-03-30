@@ -56,12 +56,12 @@ def privacy():
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('profile'))
-    return render_template('authn/choose-login.html') 
+    return render_template('authn/choose-login.html')
 
 @app.route('/google-login', methods=['GET', 'POST'])
 def google_login():
     if current_user.is_authenticated and google.authorized:
-        return redirect(url_for('profile'))
+        return redirect(url_for('profile',username=current_user.f_name))
     if not google.authorized:
         return redirect(url_for('google.login'))
     try:
@@ -78,15 +78,15 @@ def google_login():
             login_user(user)
             current_user.login_method = "google"
             flash("Signed in with Google")
-            return redirect(url_for('profile'))
+            return redirect(url_for('profile',username=current_user.f_name))
     except (InvalidGrantError, TokenExpiredError) as e:
         return redirect(url_for("google.login"))
-    return redirect(url_for('profile'))
+    return redirect(url_for('profile',username=current_user.f_name))
 
 @app.route('/facebook-login', methods=['GET', 'POST'])
 def facebook_login():
     if current_user.is_authenticated and facebook.authorized:
-        return redirect(url_for('profile'))
+        return redirect(url_for('profile',username=current_user.f_name))
     if not facebook.authorized:
         return redirect(url_for('facebook.login'))
     try:
@@ -107,10 +107,10 @@ def facebook_login():
             login_user(user)
             current_user.login_method = "facebook"
             flash("Signed in with Facebook")
-            return redirect(url_for('profile'))
+            return redirect(url_for('profile',username=current_user.f_name))
     except (InvalidGrantError, TokenExpiredError) as e:
         return redirect(url_for('facebook.login'))
-    return redirect(url_for('profile'))
+    return redirect(url_for('profile',username=current_user.f_name))
 
 @app.route('/signup')
 def signup():
@@ -147,20 +147,32 @@ def logout():
 #################
 ## User Routes ##
 #################
-
 ## All user routes should eventually be modified to have dynamic links
-## such that the urls are /<username>/profile, etc.
-@app.route('/user')
-@app.route('/profile', methods=['GET', 'POST'])
+## such that the urls are /<username>/profile, etc
+
+@app.url_defaults
+def add_username(endpoint, values):
+    if 'username' in values:
+        return
+    if app.url_map.is_endpoint_expecting(endpoint, 'username'):
+        values['username']=current_user.f_name
+
+@app.url_value_preprocessor
+def pull_username(endpoint, values):
+    username = values.pop('username', current_user.f_name)
+
+@app.route('/user', defaults={'username':'apple'})
+@app.route('/user/<string:username>')
+@app.route('/profile/<string:username>', methods=['GET', 'POST'])
 @login_required
-def profile():
+def profile(username='sing'):
     form = SearchForm()
     search_form(form)
-    return render_template('user/profile.html', form=form)
+    return render_template('user/profile.html', form=form, username=username)
 
 ## Book should appear as /user/<book>
 ## Should book be moved to a more general page?
-@app.route('/user/book', methods=['GET', 'POST'])
+@app.route('/user/<string:username>/book', methods=['GET', 'POST'])
 @login_required
 def user_book():
     form = SearchForm()
@@ -174,7 +186,7 @@ def my_shelf():
     search_form(form)
     return render_template('user/my-shelf.html', form=form)
 
-@app.route('/user/search', methods=['GET', 'POST'])
+@app.route('/user/<string:username>/search', methods=['GET', 'POST'])
 @login_required
 def search():
     form = SearchForm()
@@ -183,7 +195,7 @@ def search():
         return redirect('/user/search')
     return render_template('user/search.html', form=form, SEARCH_KEY=SEARCH_KEY)
 
-@app.route('/user/settings', methods=['GET', 'POST'])
+@app.route('/user/<string:username>/settings', methods=['GET', 'POST'])
 @login_required
 def user_settings():
     form = SearchForm()
