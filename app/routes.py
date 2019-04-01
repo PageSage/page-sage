@@ -151,13 +151,15 @@ def logout():
 ## such that the urls are /<username>/profile, etc
 
 @app.url_defaults
+@login_required
 def add_username(endpoint, values):
     if 'username' in values:
         return
     if app.url_map.is_endpoint_expecting(endpoint, 'username'):
-        values['username']=current_user.f_name
+        values['username'] = current_user.f_name
 
 @app.url_value_preprocessor
+@login_required
 def pull_username(endpoint, values):
     username = values.pop('username', current_user.f_name)
 
