@@ -1,4 +1,4 @@
-from flask import render_template, session, abort, redirect, url_for, flash
+from flask import render_template, session, abort, redirect, url_for, flash,g
 from app import app, db
 from app.forms import SearchForm
 from flask_dance.consumer import oauth_authorized
@@ -151,7 +151,6 @@ def logout():
 ## such that the urls are /<username>/profile, etc
 
 @app.url_defaults
-@login_required
 def add_username(endpoint, values):
     if 'username' in values:
         return
@@ -159,9 +158,8 @@ def add_username(endpoint, values):
         values['username'] = current_user.f_name
 
 @app.url_value_preprocessor
-@login_required
 def pull_username(endpoint, values):
-    username = values.pop('username', current_user.f_name)
+    username = values.pop('username', None)
 
 @app.route('/user', defaults={'username':'apple'})
 @app.route('/user/<string:username>')
