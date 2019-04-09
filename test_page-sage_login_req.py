@@ -96,7 +96,7 @@ class BasicRouteTests(unittest.TestCase):
         self.assertEqual(response.status_code, 401)
 
     def test_my_shelf(self):
-        response = self.app.get('/my-shelf',username='dumb')
+        response = self.app.get('/my-shelf')
         self.assertEqual(response.status_code, 401)
 
     def test_user_search(self):
