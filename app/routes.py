@@ -149,17 +149,17 @@ def logout():
 #################
 ## All user routes should eventually be modified to have dynamic links
 ## such that the urls are /<username>/profile, etc
-
-@app.url_defaults
-def add_username(endpoint, values):
-    if 'username' in values:
-        return
-    if app.url_map.is_endpoint_expecting(endpoint, 'username'):
-        values['username'] = current_user.f_name
-
-@app.url_value_preprocessor
-def pull_username(endpoint, values):
-    username = values.pop('username', None)
+#
+# @app.url_defaults
+# def add_username(endpoint, values):
+#     if 'username' in values:
+#         return
+#     if app.url_map.is_endpoint_expecting(endpoint, 'username'):
+#         values['username'] = current_user.f_name
+#
+# @app.url_value_preprocessor
+# def pull_username(endpoint, values):
+#     username = values.pop('username', None)
 
 @app.route('/user', defaults={'username':'apple'})
 @app.route('/user/<string:username>')
@@ -168,39 +168,39 @@ def pull_username(endpoint, values):
 def profile(username='sing'):
     form = SearchForm()
     search_form(form)
-    return render_template('user/profile.html', form=form, username=username)
+    return render_template('user/profile.html', form=form, username=current_user.f_name)
 
 ## Book should appear as /user/<book>
 ## Should book be moved to a more general page?
 @app.route('/user/<string:username>/book', methods=['GET', 'POST'])
 @login_required
-def user_book():
+def user_book(username):
     form = SearchForm()
     search_form(form)
-    return render_template('user/book.html', form=form)
+    return render_template('user/book.html', form=form, username=current_user.f_name)
 
-@app.route('/my-shelf', methods=['GET', 'POST'])
+@app.route('/user/<string:username>/my-shelf', methods=['GET', 'POST'])
 @login_required
-def my_shelf():
+def my_shelf(username='default'):
     form = SearchForm()
     search_form(form)
-    return render_template('user/my-shelf.html', form=form)
+    return render_template('user/my-shelf.html', form=form, username=current_user.f_name)
 
 @app.route('/user/<string:username>/search', methods=['GET', 'POST'])
 @login_required
-def search():
+def search(username):
     form = SearchForm()
     if form.validate_on_submit():
         flash('Search requested for {}'.format(form.search_item.data))
         return redirect('/user/search')
-    return render_template('user/search.html', form=form, SEARCH_KEY=SEARCH_KEY)
+    return render_template('user/search.html', form=form, SEARCH_KEY=SEARCH_KEY, username=current_user.f_name)
 
 @app.route('/user/<string:username>/settings', methods=['GET', 'POST'])
 @login_required
-def user_settings():
+def user_settings(usernmae):
     form = SearchForm()
     search_form(form)
-    return render_template('user/settings.html', form=form)
+    return render_template('user/settings.html', form=form, username=current_user.f_name)
 
 
 #####################
