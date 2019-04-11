@@ -2,18 +2,22 @@ import requests
 import os
 import re
 import numpy as np
-import tensorflow as tf
-import tensorflow.keras as keras
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
-from sklearn.linear_model import LogisticRegression, SGDClassifier
+from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import make_pipeline
-
 from copy import deepcopy
+
 
 
 class BookClassifier(object):
     def __init__(self, volumes=[], ratings=[]):
+        '''Machine Learning classifier to predict if a reader will like a certain book or not.
+        
+        Params:  volumes | list of volumeIDs of books
+                 ratings | list of corresponding ratings
+        '''
+
         if (len(volumes) == 0) or (len(ratings) == 0):
             raise ValueError('Initial values cannot be zero')
         if (len(volumes) != len(ratings)):
@@ -194,57 +198,28 @@ class BookClassifier(object):
 
 
     def fit(self):
-        '''
-        model = keras.models.Sequential()
-        model.add(keras.layers.Dense(units=20, input_dim=self.X_train.shape[1],
-                                     kernel_initializer='glorot_uniform',
-                                     bias_initializer='zeros',
-                                     activation='relu'))
+        ''' Fit classifier to initialized data.'''
 
-        model.add(keras.layers.Dense(units=20, input_dim=self.X_train.shape[1],
-                                     kernel_initializer='glorot_uniform',
-                                     bias_initializer='zeros',
-                                     activation='relu'))
-
-        model.add(keras.layers.Dense(units=self.y_train.shape[1], input_dim=self.X_train.shape[1],
-                                     kernel_initializer='glorot_uniform',
-                                     bias_initializer='zeros',
-                                     activation='softmax'))
-
-        sgd_optimizer = keras.optimizers.SGD(lr=0.001, decay=1e-7, momentum=0.9)
-
-        model.compile(optimizer='adadelta', loss='binary_crossentropy')
-
-        history = model.fit(self.X_train, self.y_train,
-                            batch_size=3, epochs=15, verbose=1,
-                            validation_split=0.1)
-
-        self.y_train_pred = model.predict_classes(self.X_train, verbose=0)
-
-        '''
-        
         pipe_lr = make_pipeline(StandardScaler(),
                                 PCA(),
                                 LogisticRegression(random_state=1, solver='lbfgs'))
         
-        #self.y_train = 
         pipe_lr.fit(self.X_train, self.y_train)
         
         self.y_train_pred = pipe_lr.predict(self.X_train)
         
         self.__model = pipe_lr
         
-        #pipe_sgd = make_pipeline(StandardScaler(), PCA(), SGDClassifier(max_iter=1000, tol=1e-3))
-        #pipe_sgd.fit(self.X_train, self.y_train)
-        #self.y_train_pred = pipe_sgd.predict(self.X_train)
         self.__model = pipe_sgd
     
         
     def feature_space(self):
+        '''View the shape of the internal data'''
         return str(self.X_train.shape[0]) + ', ' + str(self.X_train.shape[1])
     
     
     def train_acc(self):
+        '''Show the estimated training accuracy after the classifier is fit.'''
         return np.sum(self.y_train_pred == self.y_train, axis=0) / self.y_train.shape[0]
     
         
@@ -257,10 +232,15 @@ class BookClassifier(object):
         raise TypeError("Goddamn")
     
     def sample_data(self):
+        '''Show a sample of the data.'''
         return 'Original:\n' + str(self.__book_data[0]) + '\nPost-processed:\n' + str(self.X_train)
     
     
     def predict(self, book=[]):
+        '''Predict label on a single new sample (volumeID).
+
+           Params:  book | volumeID of new sample as String
+        '''
         if book == [] or book =="":
             raise ValueError('Parameter cannot be an empty book')
         if self.__model == None:
@@ -272,3 +252,12 @@ class BookClassifier(object):
         
         return (self.__model.predict([X_sample]), self.__model.predict_proba([X_sample]))
 
+
+
+
+def create_classifier(user_ratings=[], user_volumes=[]):
+    if user_ratings == [] or user_volumes == []:
+        raise TypeError('User ratings')
+    model = BookClassifier(user_ratings, user_volumes)
+    model.fit()
+    return deepcopy(model)
