@@ -1,32 +1,42 @@
 {% extends "user/header.html" %}
 
 {% block content %}
-    <div class="w3-row-padding w3-padding-64 w3-container w3-light-grey shadow">
-        <div class="w3-content">
-            <div class="w3-twothird">
-            <h1>A book</h1>
-            <p class="w3-text-grey">Information for a specific book</p>
-            </div>
-        
-            <div class="w3-third w3-center">
-                <img class="w3-image" alt="derp cat" src="{{ url_for('static', filename='./img/cat.png') }}">
-            </div>
-        </div>
+<div class="w3-row-padding w3-padding-64 w3-container w3-light-grey shadow">
+  <div class="w3-content">
+    <div class="w3-twothird">
+      <h1>A book</h1>
+      <p class="w3-text-grey">Information for a specific book</p>
+      <div class="card">
+        <img src= {{thumbnail}} alt="https://visualhunt.com/photo/40795/portrait-of-beautiful-cat-with-blue-eyes/" style="width:100%">
+        <h1> {{bookTitle}} </h1>
+        <p class="google_Link">{{googleLink}}
+        </p>
+        <p>{{bookDescription}}</p>
+        <p><button>Add to bookclub</button></p>
+      </div>
+
+      </div>
     </div>
 
-    <!-- Second Grid -->
-    <div id="green-bg" class="w3-row-padding w3-container" style="padding-top: 100px; padding-bottom: 100px;">
-        <div class="w3-content">
-            <div class="w3-third w3-center">
-                <i class="fas fa-pencil-alt w3-padding-64 w3-text-grey w3-margin-right" style="font-size: 100px"></i>
-            </div>
-        
-            <div class="w3-twothird">
-            <h1>Additional Info</h1>
-            
-            <p class="w3-text-grey">Notes, ratings and other personal info</p>
-            </div>
-        </div>
+    <div class="w3-third w3-center">
+      <img class="w3-image" alt="derp cat" src="{{ url_for('static', filename='./img/cat.png') }}">
     </div>
+  </div>
+</div>
+
+<!-- Second Grid -->
+<div id="green-bg" class="w3-row-padding w3-container" style="padding-top: 100px; padding-bottom: 100px;">
+  <div class="w3-content">
+    <div class="w3-third w3-center">
+      <i class="fas fa-pencil-alt w3-padding-64 w3-text-grey w3-margin-right" style="font-size: 100px"></i>
+    </div>
+
+    <div class="w3-twothird">
+      <h1>Additional Info</h1>
+
+      <p class="w3-text-grey">Notes, ratings and other personal info</p>
+    </div>
+  </div>
+</div>
 
 {% endblock %}

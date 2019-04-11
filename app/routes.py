@@ -1,6 +1,6 @@
 from flask import render_template, session, abort, redirect, url_for, flash
 from app import app, db
-from app.forms import SearchForm
+from app.forms import SearchForm, BookForm
 from flask_dance.consumer import oauth_authorized
 from flask_dance.contrib.google import google
 from flask_dance.contrib.facebook import facebook
@@ -56,7 +56,7 @@ def privacy():
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('profile'))
-    return render_template('authn/choose-login.html') 
+    return render_template('authn/choose-login.html')
 
 @app.route('/google-login', methods=['GET', 'POST'])
 def google_login():
@@ -163,9 +163,13 @@ def profile():
 @app.route('/user/book', methods=['GET', 'POST'])
 @login_required
 def user_book():
-    form = SearchForm()
-    search_form(form)
-    return render_template('user/book.html', form=form)
+    form= SearchForm()
+    form2 = BookForm()
+    if form2.validate():
+        title = form.title.data
+        isbn = form.isbn.data
+        return redirect('user_book',title=title,isbn=isbn)
+    return render_template('user/book.html',form=form, form2=form2, SEARCH_KEY=SEARCH_KEY)
 
 @app.route('/my-shelf', methods=['GET', 'POST'])
 @login_required
@@ -178,6 +182,7 @@ def my_shelf():
 @login_required
 def search():
     form = SearchForm()
+    form2= BookForm()
     if form.validate_on_submit():
         flash('Search requested for {}'.format(form.search_item.data))
         return redirect('/user/search')
