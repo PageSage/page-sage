@@ -9,6 +9,8 @@ from flask_login import login_required, login_user, logout_user, current_user, l
 from oauthlib.oauth2.rfc6749.errors import InvalidGrantError, TokenExpiredError, OAuth2Error
 from app.models import User, OAuth
 import os
+import requests
+
 
 SEARCH_KEY = os.environ.get('SEARCH_KEY')
 
@@ -183,10 +185,26 @@ def my_shelf():
 def search():
     form = SearchForm()
     form2= BookForm()
+    maxResults = '40'
+    orderBy = 'relevance'
+    printType = 'books'
+    projection = 'full'
+    url = 'https://www.googleapis.com/books/v1/volumes?q=' + form.search_item.data + '&maxResults=' + maxResults +'&orderBy=' + orderBy +'&printType=' + printType +'&projection=' + projection +'&key=' + SEARCH_KEY
+    resp = requests.get(url)
+    #if resp.ok:
+    #    resp = resp.json()
+    resp = resp.json()
+    new_resp = []
+    for book in resp['items']:
+        new_book = []
+        new_book.append(book['volumeInfo']['title'])
+        new_book.append(book['id'])
+        new_resp.append(new_book)
+    #searchTerm = form.value
     if form.validate_on_submit():
         flash('Search requested for {}'.format(form.search_item.data))
         return redirect('/user/search')
-    return render_template('user/search.html', form=form, SEARCH_KEY=SEARCH_KEY)
+    return render_template('user/search.html', form=form, form2=form2, SEARCH_KEY=SEARCH_KEY, resp=new_resp)
 
 @app.route('/user/settings', methods=['GET', 'POST'])
 @login_required

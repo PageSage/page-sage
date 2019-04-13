@@ -36,29 +36,7 @@ function clearSearch() {
     searchItem.value="";
 }
 
-function bookSearch() {
-    let search = searchItem.value;
-    document.getElementById('results').innerHTML = "";
-    console.log(search);
-    let maxResults = "40";
-    let orderBy = "relevance";
-    let printType = "books";
-    let projection = "full";
-    $.ajax({
-        url: "https://www.googleapis.com/books/v1/volumes?q=" + search + "&maxResults=" + maxResults +
-             "&orderBy=" + orderBy + "&printType=" + printType + "&projection=" + projection +
-             "&key=" + search_api,
-       dataType: "json",
-       type: 'GET',
-       success: function(books) {
-           for (i = 0; i < books.items.length; i++) {
-               results.innerHTML += "<div class='form-group'>"+
-               '{{form2.bookTitle(value+books.items[i].volumeInfo.title' +
-               " type='hidden')}} {{form2.isbn(value="+books.items[i].volumeInfo.industryIdentifiers[1].identifier+" type='hidden')}}"+ "<input type='submit' name='book' value="+books.items[i].volumeInfo.title+ "></input></div>"
-           }
-       }
-    });
-}
+
 function bookShower(){
   let bookchoice= bookSearcher.value;
   document.getElementById('bookresult').innerHTML = "";
