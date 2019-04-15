@@ -1,4 +1,4 @@
-from flask import render_template, session, abort, redirect, url_for, flash
+from flask import render_template, session, abort, redirect, url_for, flash, request
 from app import app, db
 from app.forms import SearchForm, BookForm
 from flask_dance.consumer import oauth_authorized
@@ -162,16 +162,20 @@ def profile():
 
 ## Book should appear as /user/<book>
 ## Should book be moved to a more general page?
-@app.route('/user/book', methods=['GET', 'POST'])
+@app.route('/user/<string:title>', methods=['GET', 'POST'])
 @login_required
-def user_book():
+def user_book(title):
+    if request.method == 'POST':
+        title = (request.form['bTitle']).replace(' ','_')
+        return redirect(url_for('user_book',title=title))
+    print(title)
     form= SearchForm()
     form2 = BookForm()
     if form2.validate():
         title = form.title.data
         isbn = form.isbn.data
         return redirect('user_book',title=title,isbn=isbn)
-    return render_template('user/book.html',form=form, form2=form2, SEARCH_KEY=SEARCH_KEY)
+    return render_template('user/book.html',form=form, form2=form2, SEARCH_KEY=SEARCH_KEY,title=title)
 
 @app.route('/my-shelf', methods=['GET', 'POST'])
 @login_required

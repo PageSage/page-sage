@@ -21,13 +21,14 @@
         </div>
     </div>
 
-    <form action="{{url_for('user_book')}}" method="post">
+    <form action="{{url_for('user_book',title='title')}}" method="post">
       <div class="form_inline">
         <div class="w3-display-container shadow w3-light-grey w3-padding-64 shadow">
         <h3>Results:</h3>
         <p id="results" style="color:black;"></p>
         {% for book in resp %}
-          <p>{{ book[0] }}  {{book[1]}}</p>
+          <p>{{book[0]}}  {{book[1]}}</p>
+          <input type="submit" name='bTitle' value="{{book[0]}}">
         {% endfor %}
         </div>
 

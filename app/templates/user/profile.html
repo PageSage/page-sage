@@ -5,11 +5,11 @@
     <header class="w3-container w3-dark-grey w3-center shadow">
         <h1 class="w3-margin w3-jumbo">User Profile</h1>
         <div class="w3-xlarge">
-            <a href="{{ url_for('user_book') }}" class="text-light">
+            <a href="{{ url_for('user_book', title='last_title') }}" class="text-light">
             Books...
             </a>
         </div>
-    </header>   
+    </header>
     <!-- First Grid -->
     <div id="green-bg" class="w3-row-padding w3-padding-64 w3-container shadow">
         <div class="w3-content">
@@ -17,7 +17,7 @@
             <h1 class="text-light">Messages</h1>
             <p class="text-light">Any unread messages...</p>
           </div>
-      
+
           <div class="w3-third w3-center">
             <i class="fas fa-comment w3-padding-64 text-light" style="font-size: 100px"></i>
           </div>
@@ -30,13 +30,13 @@
           <a href="{{ url_for('search') }}" class="w3-third w3-center">
             <i class="fas fa-plus text-light w3-padding-64 w3-margin-right" style="font-size: 100px"></i>
           </div>
-      
+
           <div class="w3-twothird text-light">
             <h1>Add Books</h1>
-            
+
             <p class="text-light">Goes to search page to add books</p>
           </div>
         </div>
       </div>
-      
+
 {% endblock %}
