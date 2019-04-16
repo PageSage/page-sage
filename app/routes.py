@@ -165,11 +165,8 @@ def profile():
 @app.route('/user/<string:title>', methods=['GET', 'POST'])
 @login_required
 def user_book(title):
-    if request.method == 'POST':
-        title = (request.form['bTitle']).replace(' ','_')
-        return redirect(url_for('user_book',title=title))
     print(title)
-    form= SearchForm()
+    form = SearchForm()
     form2 = BookForm()
     if form2.validate():
         title = form.title.data
@@ -203,6 +200,8 @@ def search():
         new_book = []
         new_book.append(book['volumeInfo']['title'])
         new_book.append(book['id'])
+        urltitle = (book['volumeInfo']['title']).replace(' ','_')
+        new_book.append(urltitle)
         new_resp.append(new_book)
     #searchTerm = form.value
     if form.validate_on_submit():
