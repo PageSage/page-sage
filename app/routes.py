@@ -168,11 +168,23 @@ def user_book(title):
     print(title)
     form = SearchForm()
     form2 = BookForm()
-    if form2.validate():
-        title = form.title.data
-        isbn = form.isbn.data
-        return redirect('user_book',title=title,isbn=isbn)
-    return render_template('user/book.html',form=form, form2=form2, SEARCH_KEY=SEARCH_KEY,title=title)
+    #if form2.validate():
+    bookid = request.form['bookid']
+    print(bookid)
+    url= 'https://www.googleapis.com/books/v1/volumes/'+ bookid +"?key="+ SEARCH_KEY
+    resp = requests.get(url)
+    resp = resp.json()
+    author= resp['volumeInfo']['authors']
+    title= resp['volumeInfo']['title']
+    thumbnail= resp['volumeInfo']['imageLinks']['thumbnail']
+    googlelink= resp['selfLink']
+    description= resp['volumeInfo']['description']
+    print(resp)
+    print(author)
+    #    title = form.title.data
+    #    isbn = form.isbn.data
+    #    return redirect('user_book',title=title,isbn=isbn)
+    return render_template('user/book.html',form=form, form2=form2, SEARCH_KEY=SEARCH_KEY,bookTitle=title,author=author,thumbnail=thumbnail,googlelink=googlelink,bookDescription=description)
 
 @app.route('/my-shelf', methods=['GET', 'POST'])
 @login_required
