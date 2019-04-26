@@ -27,10 +27,8 @@
         <h3>Results:</h3>
         <p id="results" style="color:black;"></p>
         {% for book in resp %}
-        <input type="submit" name='bookid' value="{{book[1]}}">
-        <a href= "{{book[2]}}">{{book[0]}}</a>
+        <a href="{{url_for('user_book', title= book[2],bookid= book[1])}}">{{book[0]}}</a>
         <br>
-
         {% endfor %}
         </div>
 

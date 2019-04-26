@@ -1,16 +1,17 @@
 from flask import render_template, session, abort, redirect, url_for, flash, request
 from app import app, db
-from app.forms import SearchForm, BookForm
+from app.forms import SearchForm, BookInputs
 from flask_dance.consumer import oauth_authorized
 from flask_dance.contrib.google import google
 from flask_dance.contrib.facebook import facebook
+from flask_inputs import Inputs
 import requests
 from flask_login import login_required, login_user, logout_user, current_user, login_manager
 from oauthlib.oauth2.rfc6749.errors import InvalidGrantError, TokenExpiredError, OAuth2Error
 from app.models import User, OAuth
 import os
 import requests
-
+import re
 
 SEARCH_KEY = os.environ.get('SEARCH_KEY')
 
@@ -163,14 +164,13 @@ def profile():
 ## Book should appear as /user/<book>
 ## Should book be moved to a more general page?
 @app.route('/user/<string:title>', methods=['GET', 'POST'])
+@app.route('/user/<string:title>/<string:bookid>',methods=['GET', 'POST'])
 @login_required
-def user_book(title):
-    print(title)
+def user_book(title,bookid=None):
+    inputValid= BookInputs(request)
     form = SearchForm()
-    form2 = BookForm()
-    #if form2.validate():
-    bookid = request.form['bookid']
-    print(bookid)
+    if not inputValid.validate():
+        return redirect('profile')
     url= 'https://www.googleapis.com/books/v1/volumes/'+ bookid +"?key="+ SEARCH_KEY
     resp = requests.get(url)
     resp = resp.json()
@@ -179,12 +179,14 @@ def user_book(title):
     thumbnail= resp['volumeInfo']['imageLinks']['thumbnail']
     googlelink= resp['selfLink']
     description= resp['volumeInfo']['description']
-    print(resp)
-    print(author)
-    #    title = form.title.data
-    #    isbn = form.isbn.data
-    #    return redirect('user_book',title=title,isbn=isbn)
-    return render_template('user/book.html',form=form, form2=form2, SEARCH_KEY=SEARCH_KEY,bookTitle=title,author=author,thumbnail=thumbnail,googlelink=googlelink,bookDescription=description)
+    description= re.sub('<.*?>', '', description)
+    return render_template('user/book.html',form=form,bookid=bookid, SEARCH_KEY=SEARCH_KEY,bookTitle=title,author=author,thumbnail=thumbnail,googlelink=googlelink,bookDescription=description)
+
+#    title = form.title.data
+#    isbn = form.isbn.data
+#    return redirect('user_book',title=title,isbn=isbn)
+
+
 
 @app.route('/my-shelf', methods=['GET', 'POST'])
 @login_required
@@ -197,7 +199,6 @@ def my_shelf():
 @login_required
 def search():
     form = SearchForm()
-    form2= BookForm()
     maxResults = '40'
     orderBy = 'relevance'
     printType = 'books'
@@ -219,7 +220,7 @@ def search():
     if form.validate_on_submit():
         flash('Search requested for {}'.format(form.search_item.data))
         return redirect('/user/search')
-    return render_template('user/search.html', form=form, form2=form2, SEARCH_KEY=SEARCH_KEY, resp=new_resp)
+    return render_template('user/search.html', form=form, SEARCH_KEY=SEARCH_KEY, resp=new_resp)
 
 @app.route('/user/settings', methods=['GET', 'POST'])
 @login_required
