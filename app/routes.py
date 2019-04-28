@@ -215,7 +215,12 @@ def search():
         new_book.append(book['volumeInfo']['title'])
         new_book.append(book['id'])
         urltitle = (book['volumeInfo']['title']).replace(' ','_')
+        try:
+            image = book['volumeInfo']['imageLinks']['thumbnail']
+        except (KeyError):
+            image = url_for('static', filename='./img/cat.png')
         new_book.append(urltitle)
+        new_book.append(image)
         new_resp.append(new_book)
     #searchTerm = form.value
     if form.validate_on_submit():
