@@ -9,6 +9,8 @@ from flask_login import login_required, login_user, logout_user, current_user, l
 from oauthlib.oauth2.rfc6749.errors import InvalidGrantError, TokenExpiredError, OAuth2Error
 from app.models import User, OAuth
 import os
+from recommendations.book_classifier import BookClassifier
+import pickle
 
 SEARCH_KEY = os.environ.get('SEARCH_KEY')
 
