@@ -12,6 +12,8 @@ from app.models import User, OAuth
 import os
 import requests
 import re
+from recommendations.book_classifier import BookClassifier
+import pickle
 
 SEARCH_KEY = os.environ.get('SEARCH_KEY')
 
