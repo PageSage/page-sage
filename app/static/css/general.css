@@ -1,8 +1,4 @@
-#header-bg {
-    background-color: #C0CDAD;
-  }
-  
-  body, html {
+    body, html {
     height: 100%;
     width: 100%;
     margin: 0;
@@ -22,18 +18,19 @@
     background-color: #FFFFFF;
     color: #000000;
   }
+
    .main-scheme a {
     color: #000000;
    }
   
    .book-section {
-    background-color: #C0CDAD;
+    background-color: #8F9882;
     width: 100% !important;
     height: 25%;
    }
   
    #green-bg {
-    background-color: #C0CDAD;
+    background-color: #8F9882;
    }
   
    .search-bar {
@@ -44,7 +41,6 @@
    }
   
   .sidebar {
-    background-color: #C0CDAD;
     width: 12%;
   }
   
