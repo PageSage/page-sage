@@ -164,14 +164,14 @@ def profile():
 ## Book should appear as /user/<book>
 ## Should book be moved to a more general page?
 @app.route('/user/<string:title>', methods=['GET', 'POST'])
-@app.route('/user/<string:title>/<string:bookid>',methods=['GET', 'POST'])
+@app.route('/user/<string:title>/<string:bookid>', methods=['GET', 'POST'])
 @login_required
-def user_book(title,bookid=None):
-    inputValid= BookInputs(request)
+def user_book(title, bookid=None):
+    inputValid = BookInputs(request)
     form = SearchForm()
     if not inputValid.validate():
         return redirect('profile')
-    url= 'https://www.googleapis.com/books/v1/volumes/'+ bookid +"?key="+ SEARCH_KEY
+    url = 'https://www.googleapis.com/books/v1/volumes/'+ bookid +"?key="+ SEARCH_KEY
     resp = requests.get(url)
     resp = resp.json()
     author= resp['volumeInfo']['authors']
@@ -180,7 +180,8 @@ def user_book(title,bookid=None):
     googlelink= resp['selfLink']
     description= resp['volumeInfo']['description']
     description= re.sub('<.*?>', '', description)
-    return render_template('user/book.html',form=form,bookid=bookid, SEARCH_KEY=SEARCH_KEY,bookTitle=title,author=author,thumbnail=thumbnail,googlelink=googlelink,bookDescription=description)
+
+    return render_template('user/book.html',form=form, bookid=bookid, SEARCH_KEY=SEARCH_KEY, bookTitle=title, author=author, thumbnail=thumbnail, googlelink=googlelink, bookDescription=description)
 
 #    title = form.title.data
 #    isbn = form.isbn.data
@@ -203,7 +204,7 @@ def search():
     orderBy = 'relevance'
     printType = 'books'
     projection = 'full'
-    url = 'https://www.googleapis.com/books/v1/volumes?q=' + form.search_item.data + '&maxResults=' + maxResults +'&orderBy=' + orderBy +'&printType=' + printType +'&projection=' + projection +'&key=' + SEARCH_KEY
+    url = 'https://www.googleapis.com/books/v1/volumes?q=' + form.search_item.data + '&maxResults=' + maxResults + '&orderBy=' + orderBy + '&printType=' + printType + '&projection=' + projection + '&key=' + SEARCH_KEY
     resp = requests.get(url)
     #if resp.ok:
     #    resp = resp.json()

@@ -7,11 +7,10 @@
       <h1>A book</h1>
       <p class="w3-text-grey">Information for a specific book</p>
       <div class="card">
-        <img src= {{thumbnail}} alt="https://visualhunt.com/photo/40795/portrait-of-beautiful-cat-with-blue-eyes/" style="width:100%">
-        <h1> {{bookTitle}} </h1>
-        <p class="google_Link">{{googleLink}}
-        </p>
-        <p>{{bookDescription}}</p>
+        <img src="{{ thumbnail }}" alt="{{ bookTitle }}" style="width:100%">
+        <h1>{{ bookTitle }}</h1>
+        <a class="google_Link" href="{{ googleLink }}">Link to Google Books Page</a>
+        <p>{{ bookDescription }}</p>
         <p><button>Add to bookclub</button></p>
       </div>
 
