@@ -174,10 +174,16 @@ def user_book(title, bookid=None):
     url = 'https://www.googleapis.com/books/v1/volumes/'+ bookid +"?key="+ SEARCH_KEY
     resp = requests.get(url)
     resp = resp.json()
-    author= resp['volumeInfo']['authors']
-    title= resp['volumeInfo']['title']
-    thumbnail= resp['volumeInfo']['imageLinks']['thumbnail']
-    googlelink= resp['selfLink']
+    author = resp['volumeInfo']['authors']
+    title = resp['volumeInfo']['title']
+    try:
+        thumbnail = resp['volumeInfo']['imageLinks']['small']
+    except (KeyError):
+        try:
+            thumbnail = resp['volumeInfo']['imageLinks']['thumbnail']
+        except(keyError):
+            thumbnail = url_for('static', filename='./img/cat.png')
+    googlelink= resp['volumeInfo']['previewLink']
     description= resp['volumeInfo']['description']
     description= re.sub('<.*?>', '', description)
 
