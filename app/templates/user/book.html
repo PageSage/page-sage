@@ -1,32 +1,37 @@
 {% extends "user/header.html" %}
 
 {% block content %}
-    <div class="w3-row-padding w3-padding-64 w3-container w3-light-grey shadow">
-        <div class="w3-content">
-            <div class="w3-twothird">
-            <h1>A book</h1>
-            <p class="w3-text-grey">Information for a specific book</p>
-            </div>
-        
-            <div class="w3-third w3-center">
-                <img class="w3-image" alt="derp cat" src="{{ url_for('static', filename='./img/cat.png') }}">
-            </div>
-        </div>
+<div class="w3-row w3-padding w3-container shadow">
+  <div class="w3-third w3-display-container w3-container" style="height:850px;">
+      <div class="w3-center">
+        <img class="w3-middle w3-center" src="{{ thumbnail }}" alt="{{ bookTitle }}" style="width:80%; padding-top: 10px">
+      </div>
+  </div>
+  <div class="w3-twothird w3-display-container w3-container" style="padding-top: 10px; height: 850px">
+    <span>
+      <h1><b>{{ bookTitle }}</b></h1>
+    </span>
+    <div id="green-bg" class="w3-card w3-border w3-round-xlarge w3-display-container" style="width:150px; height:35px">
+      <p class="w3-large w3-middle w3-text-white w3-center">{{ percent }}% Charm</p>
+    </div>
+    <h3><b>Author:</b> {{ author[0] }}</h3>
+    <p class="w3-large"><b>Description:</b> {{ bookDescription }}</p>
+    <a class="google_Link w3-large" href="{{ googlelink }}"">Preview</a>
+  </div>
+</div>
+
+<!-- Second Grid -->
+<div id="green-bg" class="w3-row-padding w3-container" style="padding-top: 100px; padding-bottom: 100px;">
+  <div class="w3-content">
+    <div class="w3-third w3-center">
+      <i class="fas fa-pencil-alt w3-padding-64 w3-text-white w3-margin-right" style="font-size: 100px"></i>
     </div>
 
-    <!-- Second Grid -->
-    <div id="green-bg" class="w3-row-padding w3-container" style="padding-top: 100px; padding-bottom: 100px;">
-        <div class="w3-content">
-            <div class="w3-third w3-center">
-                <i class="fas fa-pencil-alt w3-padding-64 w3-text-grey w3-margin-right" style="font-size: 100px"></i>
-            </div>
-        
-            <div class="w3-twothird">
-            <h1>Additional Info</h1>
-            
-            <p class="w3-text-grey">Notes, ratings and other personal info</p>
-            </div>
-        </div>
+    <div class="w3-twothird">
+      <h1 class="w3-text-white">Additional Info</h1>
+      <p class="w3-text-white">Notes, ratings and other personal info</p>
     </div>
+  </div>
+</div>
 
 {% endblock %}
