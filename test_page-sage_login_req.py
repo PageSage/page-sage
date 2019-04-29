@@ -88,7 +88,7 @@ class BasicRouteTests(unittest.TestCase):
         self.assertEqual(response.status_code, 401)
 
     def test_profile_page(self):
-        response = self.app.get('/profile')
+        response = self.app.get('/profile/name')
         self.assertEqual(response.status_code, 401)
 
     def test_user_book(self):
@@ -96,15 +96,15 @@ class BasicRouteTests(unittest.TestCase):
         self.assertEqual(response.status_code, 401)
 
     def test_my_shelf(self):
-        response = self.app.get('/my-shelf')
+        response = self.app.get('/user/name/my-shelf')
         self.assertEqual(response.status_code, 401)
 
     def test_user_search(self):
-        response = self.app.get('/user/search')
+        response = self.app.get('/user/name/search')
         self.assertEqual(response.status_code, 401)
 
     def test_user_settings(self):
-        response = self.app.get('user/settings')
+        response = self.app.get('user/name/settings')
         self.assertEqual(response.status_code, 401)
 
 
