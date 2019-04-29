@@ -12,8 +12,11 @@ from app.models import User, OAuth
 import os
 import requests
 import re
-from recommendations.book_classifier import BookClassifier
-import pickle
+from book_classifier import BookClassifier
+import dill as pickle
+import numpy as np
+from copy import deepcopy
+import copy
 
 SEARCH_KEY = os.environ.get('SEARCH_KEY')
 
@@ -163,6 +166,13 @@ def profile():
     search_form(form)
     return render_template('user/profile.html', form=form)
 
+def choose_label(label):
+    if int(label) == 1:
+        return 'like'
+    else:
+        return 'not like'
+
+
 ## Book should appear as /user/<book>
 ## Should book be moved to a more general page?
 @app.route('/user/<string:title>', methods=['GET', 'POST'])
@@ -176,14 +186,40 @@ def user_book(title, bookid=None):
     url = 'https://www.googleapis.com/books/v1/volumes/'+ bookid +"?key="+ SEARCH_KEY
     resp = requests.get(url)
     resp = resp.json()
-    author= resp['volumeInfo']['authors']
-    title= resp['volumeInfo']['title']
-    thumbnail= resp['volumeInfo']['imageLinks']['thumbnail']
-    googlelink= resp['selfLink']
-    description= resp['volumeInfo']['description']
-    description= re.sub('<.*?>', '', description)
+    try:
+        author = resp['volumeInfo']['authors']
+    except (KeyError):
+        author = 'Unknown'
 
-    return render_template('user/book.html',form=form, bookid=bookid, SEARCH_KEY=SEARCH_KEY, bookTitle=title, author=author, thumbnail=thumbnail, googlelink=googlelink, bookDescription=description)
+    try:
+        title = resp['volumeInfo']['title']
+    except (KeyError):
+        title = 'Unknown'
+
+    try:
+        thumbnail = resp['volumeInfo']['imageLinks']['thumbnail']
+    except (KeyError):
+        thumbnail = 'Place blank book link here'
+
+    try:
+        googlelink = resp['selfLink']
+    except (KeyError):
+        googlelink = 'https://www.google.com'
+
+    try:
+        description = resp['volumeInfo']['description']
+        description = re.sub('<.*?>', '', description)
+    except (KeyError):
+        description = 'No description available'
+
+    default_model = BookClassifier
+    default_model = pickle.load(open('./app/recommendations/emily_model.pkl', 'rb'))
+    predictions = default_model.predict(bookid)
+    percent = str('%.0f' % (predictions[1]*100))
+    label = choose_label(predictions[0][0])
+
+    return render_template('user/book.html', form=form, bookid=bookid, SEARCH_KEY=SEARCH_KEY, bookTitle=title, author=author, thumbnail=thumbnail, googlelink=googlelink, bookDescription=description, label=label, percent=percent)
+
 
 #    title = form.title.data
 #    isbn = form.isbn.data

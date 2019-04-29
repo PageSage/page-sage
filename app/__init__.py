@@ -5,6 +5,7 @@ from flask_dance.contrib.facebook import make_facebook_blueprint, facebook
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
+from book_classifier import BookClassifier
 import os
 
 db = SQLAlchemy()
