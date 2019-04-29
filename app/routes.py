@@ -215,8 +215,8 @@ def user_book(title, bookid=None):
     default_model = BookClassifier
     default_model = pickle.load(open('./app/recommendations/emily_model.pkl', 'rb'))
     predictions = default_model.predict(bookid)
-    percent = str('%.0f' % (predictions[1]*100))
-    label = choose_label(predictions[0][0])
+    percent = str('%.0f' % (predictions[1][0][1]*100))
+    label = 'appeal'
 
     return render_template('user/book.html', form=form, bookid=bookid, SEARCH_KEY=SEARCH_KEY, bookTitle=title, author=author, thumbnail=thumbnail, googlelink=googlelink, bookDescription=description, label=label, percent=percent)
 
