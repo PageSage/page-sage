@@ -1,14 +1,22 @@
-from flask import render_template, session, abort, redirect, url_for, flash,g
+from flask import render_template, session, abort, redirect, url_for, flash, request
 from app import app, db
-from app.forms import SearchForm
+from app.forms import SearchForm, BookInputs
 from flask_dance.consumer import oauth_authorized
 from flask_dance.contrib.google import google
 from flask_dance.contrib.facebook import facebook
+from flask_inputs import Inputs
 import requests
 from flask_login import login_required, login_user, logout_user, current_user, login_manager
 from oauthlib.oauth2.rfc6749.errors import InvalidGrantError, TokenExpiredError, OAuth2Error
 from app.models import User, OAuth
 import os
+import requests
+import re
+from book_classifier import BookClassifier
+import dill as pickle
+import numpy as np
+from copy import deepcopy
+import copy
 
 SEARCH_KEY = os.environ.get('SEARCH_KEY')
 
@@ -61,8 +69,8 @@ def login():
 @app.route('/google-login', methods=['GET', 'POST'])
 def google_login():
     if current_user.is_authenticated and google.authorized:
-        return redirect(url_for('profile',username=current_user.f_name))
-    if not google.authorized:
+        return redirect(url_for('profile'))
+    if (not google.authorized) and (not current_user.is_authenticated):
         return redirect(url_for('google.login'))
     try:
         account_info = google.get('/oauth2/v2/userinfo')
@@ -86,8 +94,8 @@ def google_login():
 @app.route('/facebook-login', methods=['GET', 'POST'])
 def facebook_login():
     if current_user.is_authenticated and facebook.authorized:
-        return redirect(url_for('profile',username=current_user.f_name))
-    if not facebook.authorized:
+        return redirect(url_for('profile'))
+    if (not facebook.authorized) and (not current_user.is_authenticated):
         return redirect(url_for('facebook.login'))
     try:
         account_info = facebook.get('me?fields=id,first_name,email')
@@ -131,6 +139,7 @@ def logout():
     #    pass
     #with open('greenbook.log', 'a+') as filo:
     #    filo.write(current_user.login_method)
+    '''
     try:
         token = app.blueprints['google'].token['access_token']
         resp = google.post(
@@ -140,6 +149,7 @@ def logout():
         )
     except (TypeError) as e:
          pass
+    '''
     logout_user()
     flash("You have logged out")
     return redirect(url_for("index"))
@@ -170,14 +180,67 @@ def profile(username='sing'):
     search_form(form)
     return render_template('user/profile.html', form=form, username=current_user.f_name)
 
+def choose_label(label):
+    if int(label) == 1:
+        return 'like'
+    else:
+        return 'not like'
+
+
 ## Book should appear as /user/<book>
 ## Should book be moved to a more general page?
-@app.route('/user/<string:username>/book', methods=['GET', 'POST'])
+@app.route('/user/<string:title>', methods=['GET', 'POST'])
+@app.route('/user/<string:title>/<string:bookid>', methods=['GET', 'POST'])
 @login_required
-def user_book(username):
+def user_book(title, bookid=None):
+    inputValid = BookInputs(request)
     form = SearchForm()
-    search_form(form)
-    return render_template('user/book.html', form=form, username=current_user.f_name)
+    if not inputValid.validate():
+        return redirect('profile')
+    url = 'https://www.googleapis.com/books/v1/volumes/'+ bookid +"?key="+ SEARCH_KEY
+    resp = requests.get(url)
+    resp = resp.json()
+    try:
+        author = resp['volumeInfo']['authors']
+    except (KeyError):
+        author = 'Unknown'
+
+    try:
+        title = resp['volumeInfo']['title']
+    except (KeyError):
+        title = 'Unknown'
+
+    try:
+        description = resp['volumeInfo']['description']
+        description = re.sub('<.*?>', '', description)
+    except (KeyError):
+        description = 'No description available'
+
+    default_model = BookClassifier
+    default_model = pickle.load(open('./app/recommendations/emily_model.pkl', 'rb'))
+    predictions = default_model.predict(bookid)
+    percent = str('%.0f' % (predictions[1][0][1]*100))
+    label = 'appeal'
+
+    try:
+        thumbnail = resp['volumeInfo']['imageLinks']['small']
+    except (KeyError):
+        try:
+            thumbnail = resp['volumeInfo']['imageLinks']['thumbnail']
+        except(keyError):
+            thumbnail = url_for('static', filename='./img/cat.png')
+    
+    try:
+      googlelink= resp['volumeInfo']['previewLink']
+    except (KeyError):
+      googlelink = 'https://www.google.com'
+      
+    return render_template('user/book.html', form=form, bookid=bookid, SEARCH_KEY=SEARCH_KEY, bookTitle=title, author=author, thumbnail=thumbnail, googlelink=googlelink, bookDescription=description, label=label, percent=percent)
+
+#    title = form.title.data
+#    isbn = form.isbn.data
+#    return redirect('user_book',title=title,isbn=isbn)
+
 
 @app.route('/user/<string:username>/my-shelf', methods=['GET', 'POST'])
 @login_required
@@ -190,6 +253,29 @@ def my_shelf(username='default'):
 @login_required
 def search(username):
     form = SearchForm()
+    maxResults = '40'
+    orderBy = 'relevance'
+    printType = 'books'
+    projection = 'full'
+    url = 'https://www.googleapis.com/books/v1/volumes?q=' + form.search_item.data + '&maxResults=' + maxResults + '&orderBy=' + orderBy + '&printType=' + printType + '&projection=' + projection + '&key=' + SEARCH_KEY
+    resp = requests.get(url)
+    #if resp.ok:
+    #    resp = resp.json()
+    resp = resp.json()
+    new_resp = []
+    for book in resp['items']:
+        new_book = []
+        new_book.append(book['volumeInfo']['title'])
+        new_book.append(book['id'])
+        urltitle = (book['volumeInfo']['title']).replace(' ','_')
+        try:
+            image = book['volumeInfo']['imageLinks']['thumbnail']
+        except (KeyError):
+            image = url_for('static', filename='./img/cat.png')
+        new_book.append(urltitle)
+        new_book.append(image)
+        new_resp.append(new_book)
+    #searchTerm = form.value
     if form.validate_on_submit():
         flash('Search requested for {}'.format(form.search_item.data))
         return redirect('/user/search')
