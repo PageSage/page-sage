@@ -197,16 +197,6 @@ def user_book(title, bookid=None):
         title = 'Unknown'
 
     try:
-        thumbnail = resp['volumeInfo']['imageLinks']['thumbnail']
-    except (KeyError):
-        thumbnail = 'Place blank book link here'
-
-    try:
-        googlelink = resp['selfLink']
-    except (KeyError):
-        googlelink = 'https://www.google.com'
-
-    try:
         description = resp['volumeInfo']['description']
         description = re.sub('<.*?>', '', description)
     except (KeyError):
@@ -218,8 +208,20 @@ def user_book(title, bookid=None):
     percent = str('%.0f' % (predictions[1]*100))
     label = choose_label(predictions[0][0])
 
+    try:
+        thumbnail = resp['volumeInfo']['imageLinks']['small']
+    except (KeyError):
+        try:
+            thumbnail = resp['volumeInfo']['imageLinks']['thumbnail']
+        except(keyError):
+            thumbnail = url_for('static', filename='./img/cat.png')
+    
+    try:
+      googlelink= resp['volumeInfo']['previewLink']
+    except (KeyError):
+      googlelink = 'https://www.google.com'
+      
     return render_template('user/book.html', form=form, bookid=bookid, SEARCH_KEY=SEARCH_KEY, bookTitle=title, author=author, thumbnail=thumbnail, googlelink=googlelink, bookDescription=description, label=label, percent=percent)
-
 
 #    title = form.title.data
 #    isbn = form.isbn.data
@@ -253,7 +255,12 @@ def search():
         new_book.append(book['volumeInfo']['title'])
         new_book.append(book['id'])
         urltitle = (book['volumeInfo']['title']).replace(' ','_')
+        try:
+            image = book['volumeInfo']['imageLinks']['thumbnail']
+        except (KeyError):
+            image = url_for('static', filename='./img/cat.png')
         new_book.append(urltitle)
+        new_book.append(image)
         new_resp.append(new_book)
     #searchTerm = form.value
     if form.validate_on_submit():
