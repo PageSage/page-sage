@@ -70,7 +70,7 @@ def login():
 def google_login():
     if current_user.is_authenticated and google.authorized:
         return redirect(url_for('profile'))
-    if not google.authorized:
+    if (not google.authorized) and (not current_user.is_authenticated):
         return redirect(url_for('google.login'))
     try:
         account_info = google.get('/oauth2/v2/userinfo')
@@ -95,7 +95,7 @@ def google_login():
 def facebook_login():
     if current_user.is_authenticated and facebook.authorized:
         return redirect(url_for('profile'))
-    if not facebook.authorized:
+    if (not facebook.authorized) and (not current_user.is_authenticated):
         return redirect(url_for('facebook.login'))
     try:
         account_info = facebook.get('me?fields=id,first_name,email')
@@ -139,6 +139,7 @@ def logout():
     #    pass
     #with open('greenbook.log', 'a+') as filo:
     #    filo.write(current_user.login_method)
+    '''
     try:
         token = app.blueprints['google'].token['access_token']
         resp = google.post(
@@ -148,6 +149,7 @@ def logout():
         )
     except (TypeError) as e:
          pass
+    '''
     logout_user()
     flash("You have logged out")
     return redirect(url_for("index"))
