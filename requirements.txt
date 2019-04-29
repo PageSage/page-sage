@@ -11,4 +11,3 @@ numpy==1.16.2
 nltk==3.4
 sklearn==0.0
 dill==0.2.9
-sqlalchemy_utils
