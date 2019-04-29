@@ -402,6 +402,6 @@ class BookClassifier(object):
 
         X_sample = self.__preprocess_book(book)
         
-        return (self.__model.predict([X_sample]), np.max(self.__model.predict_proba([X_sample])))
+        return (self.__model.predict([X_sample]), (self.__model.predict_proba([X_sample])))
 
 
