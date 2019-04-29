@@ -2,8 +2,6 @@ import requests
 import os
 import re
 import numpy as np
-import tensorflow as tf
-import tensorflow.keras as keras
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression, SGDClassifier
