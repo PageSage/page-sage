@@ -12,7 +12,7 @@
                                 {{ form.search_item(size=50, id="search", class_="form-control mr-sm-2 mt-2 mt-md-0 search-bar w3-center", style="width: 68%;", onclick="hideStyle()") }}
                                 {{ form.search(class_="btn w3-border w3-text-grey search-button", style="margin-top: 8px; width: 32%") }}
                             </div>
-                        </form> 
+                        </form>
                     </a>
                 </div>
             </div>
@@ -21,18 +21,30 @@
         </div>
     </div>
 
-    <div class="w3-display-container shadow w3-light-grey w3-padding-64 shadow">
-        <h3>Results:</h3>
-        <p id="results" style="color:black;"></p>
+    <div class="w3-container">
+        <form action="{{url_for('user_book',title='title')}}" method="post">
+        <div class="form_inline">
+            <!-- <div class="w3-display-container shadow w3-light-grey w3-padding-64 shadow"> -->
+            <!-- <h3>Results:</h3> -->
+            <p id="results" style="color:black;"></p>
+            {% for book in resp %}
+            <a href="{{url_for('user_book', title=book[2], bookid=book[1])}}">
+                <div class="w3-third w3-hover-opacity w3-container w3-display-container" style="height:375px;">
+                    <img class="thumbnail w3-display-middle w3-padding-large" src='{{ book[3] }}'>
+                    <p class="w3-display-topmiddle w3-large" style="text-align: center;"><b>{{ book[0] }}</b></p>
+                </div>
+            </a>
+            <!-- <br> -->
+            {% endfor %}
+            </div>
+
+        </div>
+
+        </form>
     </div>
 
-
     <script>
-       var search_api = '{{ SEARCH_KEY }}';
+       var search_api = '';
 
-       window.onload = function() {
-            bookSearch();
-            clearSearch();
-       }
     </script>
 {% endblock %}

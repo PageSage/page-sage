@@ -23,9 +23,11 @@ class User(db.Model, UserMixin):
 
     books = db.relationship('User_Shelf', backref=db.backref('reader', lazy=True))
     # clubs = db.relationship('Bookclub', secondary=club_members, lazy='subquery', backref=db.backref('members', lazy=True))
+    bookclubs = db.relationship('Bookclub', secondary='members')
 
     def __repr__(self):
         return '<User {}>'.format(self.email)
+
 
 class User_Shelf(db.Model):
     __tablename__ = 'user_shelf'
@@ -37,6 +39,7 @@ class User_Shelf(db.Model):
 
     notes = db.relationship('Notes', backref=db.backref('book_note', lazy=True))
 
+
 class Bookclub(db.Model):
     __tablename__ = 'bookclub'
     id = db.Column(db.Integer, primary_key=True)
@@ -45,6 +48,18 @@ class Bookclub(db.Model):
     host = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
 
     books = db.relationship('Club_Shelf', backref=db.backref('club_book', lazy=True))
+    users = db.relationship('User', secondary='members')
+
+
+class Members(db.Model):
+    __tablename__ = 'members'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    bookclub_id = db.Column(db.Integer, db.ForeignKey('bookclub.id'))
+
+    user = db.relationship(User, backref=db.backref('members', cascade='all, delete-orphan'))
+    product = db.relationship(Bookclub, backref=db.backref('members', cascade='all, delete-orphan'))
+
 
 class Club_Shelf(db.Model):
     __tablename__ = 'club_shelf'
