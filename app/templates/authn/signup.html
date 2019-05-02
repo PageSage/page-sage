@@ -2,6 +2,6 @@
 
 {% block content %}
         <h1>Sign Up</h1>
-        <h4><a href="{{ url_for('profile') }}">Sign Me Up</a></h4>
+        <h4><a href="{{ url_for('profile',username=current_user.f_name) }}">Sign Me Up</a></h4>
         <h4><a href="{{ url_for('index') }}">Country Roads</a></h4>
 {% endblock %}

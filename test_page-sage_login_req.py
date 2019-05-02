@@ -14,7 +14,7 @@ class BasicRouteTests(unittest.TestCase):
         app.config["WTF_CSRF_ENABLED"] = False
         app.config["DEBUG"] = False
         app.config["LOGIN_DISABLED"] = True
-        
+
         self.app = app.test_client()
 
         self.assertEqual(app.debug, False)
@@ -58,7 +58,7 @@ class BasicRouteTests(unittest.TestCase):
         response = self.app.get('/privacy', follow_redirects=True)
         self.assertEqual(response.status_code, 200)
 
-  
+
     ##################
     ## AuthN Routes ##
     ##################
@@ -84,19 +84,15 @@ class BasicRouteTests(unittest.TestCase):
     #################
 
     def test_user_page(self):
-        response = self.app.get('/user')
-        self.assertEqual(response.status_code, 401)
-
-    def test_profile_page(self):
-        response = self.app.get('/profile')
+        response = self.app.get('/user/username')
         self.assertEqual(response.status_code, 401)
 
     def test_user_book(self):
-        response = self.app.get('/user/book')
+        response = self.app.get('/user/username/book')
         self.assertEqual(response.status_code, 401)
 
     def test_my_shelf(self):
-        response = self.app.get('/my-shelf')
+        response = self.app.get('/username/my-shelf')
         self.assertEqual(response.status_code, 401)
 
     def test_user_search(self):
@@ -104,7 +100,7 @@ class BasicRouteTests(unittest.TestCase):
         self.assertEqual(response.status_code, 401)
 
     def test_user_settings(self):
-        response = self.app.get('user/settings')
+        response = self.app.get('/user/username/settings')
         self.assertEqual(response.status_code, 401)
 
 
@@ -157,13 +153,13 @@ class BasicRouteTests(unittest.TestCase):
     ## Error Pages ##
     #################
 
-    ## This test does not work currently--why 
+    ## This test does not work currently--why
     def test_404_page(self):
         response = self.app.get('/anything_should_go_here')
         self.assertEqual(response.status_code, 404)
 
     def test_401_page_user(self):
-        response = self.app.get('/user')
+        response = self.app.get('/user/username')
         self.assertEqual(response.status_code, 401)
 
     def test_401_page_logout(self):
