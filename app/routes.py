@@ -160,8 +160,7 @@ def logout():
 
 ## All user routes should eventually be modified to have dynamic links
 ## such that the urls are /<username>/profile, etc.
-@app.route('/user/<string:username>')
-@app.route('/profile/<string:username>', methods=['GET', 'POST'])
+@app.route('/user/<string:username>', methods=['GET', 'POST'])
 @login_required
 def profile(username):
     form = SearchForm()
