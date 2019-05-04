@@ -21,7 +21,8 @@ class User(db.Model, UserMixin):
     profile_photo = db.Column(db.LargeBinary, nullable=True)
     algo = db.Column(db.LargeBinary, nullable=True)
 
-    books = db.relationship('User_Shelf', backref=db.backref('reader', lazy=True))
+    read_books = db.relationship('User_Shelf', backref=db.backref('user', lazy=True))
+    tbr_books = db.relationship('User_Shelf', backref=db.backref('user', lazy=True))
     # clubs = db.relationship('Bookclub', secondary=club_members, lazy='subquery', backref=db.backref('members', lazy=True))
     bookclubs = db.relationship('Bookclub', secondary='members')
 
