@@ -13,7 +13,7 @@ class BasicRouteTests(unittest.TestCase):
         app.config["WTF_CSRF_ENABLED"] = False
         app.config["DEBUG"] = False
         app.config["LOGIN_DISABLED"] = True
-        
+
         self.app = app.test_client()
 
         self.assertEqual(app.debug, False)
@@ -57,7 +57,7 @@ class BasicRouteTests(unittest.TestCase):
         response = self.app.get('/privacy', follow_redirects=True)
         self.assertEqual(response.status_code, 200)
 
-  
+
     ##################
     ## AuthN Routes ##
     ##################
@@ -150,13 +150,13 @@ class BasicRouteTests(unittest.TestCase):
     ## Error Pages ##
     #################
 
-    ## This test does not work currently--why 
+    ## This test does not work currently--why
     def test_404_page(self):
         response = self.app.get('/anything_should_go_here')
         self.assertEqual(response.status_code, 404)
 
     def test_401_page_user(self):
-        response = self.app.get('/user')
+        response = self.app.get('/user/usernamehere')
         self.assertEqual(response.status_code, 401)
 
     def test_401_page_logout(self):

@@ -5,7 +5,7 @@
     <header class="w3-container w3-dark-grey w3-center shadow">
         <h1 class="w3-margin w3-jumbo">User Profile</h1>
         <div class="w3-xlarge">
-            <a href="{{ url_for('user_book', title='last_title',bookid='bookidmissing') }}" class="text-light">
+            <a href="{{ url_for('user_book', title='last_title',bookid='bookidmissing',username=current_user.f_name) }}" class="text-light">
             Books...
             </a>
         </div>
@@ -27,7 +27,7 @@
       <!-- Second Grid -->
     <div class="w3-row-padding w3-grey w3-padding-64 w3-container shadow">
         <div class="w3-content">
-          <a href="{{ url_for('search') }}" class="w3-third w3-center">
+          <a href="{{ url_for('search',username=current_user.f_name) }}" class="w3-third w3-center">
             <i class="fas fa-plus text-light w3-padding-64 w3-margin-right" style="font-size: 100px"></i>
           </div>
 
