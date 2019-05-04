@@ -183,6 +183,7 @@ def choose_label(label):
 def user_book(title, bookid=None):
     inputValid = BookInputs(request)
     form = SearchForm()
+
     if not inputValid.validate():
         return redirect('profile')
     url = 'https://www.googleapis.com/books/v1/volumes/'+ bookid +"?key="+ SEARCH_KEY
@@ -215,7 +216,7 @@ def user_book(title, bookid=None):
     except (KeyError):
         try:
             thumbnail = resp['volumeInfo']['imageLinks']['thumbnail']
-        except(keyError):
+        except(KeyError):
             thumbnail = url_for('static', filename='./img/cat.png')
     
     try:
@@ -238,6 +239,7 @@ def my_shelf():
     search_form(form)
     return render_template('user/my-shelf.html', form=form)
 
+
 @app.route('/user/search', methods=['GET', 'POST'])
 @login_required
 def search():
@@ -248,22 +250,23 @@ def search():
     projection = 'full'
     url = 'https://www.googleapis.com/books/v1/volumes?q=' + form.search_item.data + '&maxResults=' + maxResults + '&orderBy=' + orderBy + '&printType=' + printType + '&projection=' + projection + '&key=' + SEARCH_KEY
     resp = requests.get(url)
-    #if resp.ok:
-    #    resp = resp.json()
-    resp = resp.json()
-    new_resp = []
-    for book in resp['items']:
-        new_book = []
-        new_book.append(book['volumeInfo']['title'])
-        new_book.append(book['id'])
-        urltitle = (book['volumeInfo']['title']).replace(' ','_')
-        try:
-            image = book['volumeInfo']['imageLinks']['thumbnail']
-        except (KeyError):
-            image = url_for('static', filename='./img/cat.png')
-        new_book.append(urltitle)
-        new_book.append(image)
-        new_resp.append(new_book)
+    if resp.ok:
+        resp = resp.json()
+        new_resp = []
+        for book in resp['items']:
+            new_book = []
+            new_book.append(book['volumeInfo']['title'])
+            new_book.append(book['id'])
+            urltitle = (book['volumeInfo']['title']).replace(' ','_')
+            try:
+                image = book['volumeInfo']['imageLinks']['thumbnail']
+            except (KeyError):
+                image = url_for('static', filename='./img/cat.png')
+            new_book.append(urltitle)
+            new_book.append(image)
+            new_resp.append(new_book)
+    else:
+        new_resp = None
     #searchTerm = form.value
     if form.validate_on_submit():
         flash('Search requested for {}'.format(form.search_item.data))
