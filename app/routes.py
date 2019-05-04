@@ -239,6 +239,12 @@ def my_shelf():
     search_form(form)
     return render_template('user/my-shelf.html', form=form)
 
+def read_shelf():
+    return render_template('user/my-shelf.html', form=form)
+
+def tbr_shelf():
+    return render_template('user/my-shelf.html', form=form)
+
 
 @app.route('/user/search', methods=['GET', 'POST'])
 @login_required
