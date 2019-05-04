@@ -13,3 +13,20 @@ class BookInputs(Inputs):
     'bookid': [DataRequired()],
     'title': [DataRequired()]
     }
+
+class AddBook(FlaskForm):
+    volume_id = StringField('', validators=[DataRequired()])
+    user_pred = StringField('', validators=[DataRequired()])
+    add_book = SubmitField('Add Book')
+
+class RateBookUp(FlaskForm):
+    volume_id = StringField('', validators=[DataRequired()])
+    user_rating = IntegerField('', validators=[DataRequired()])
+    img_url = StringField('', validators=[DataRequired()])
+    rate_up = SubmitField('Liked')
+
+class RateBookDown(FlaskForm):
+    volume_id = String('', validators=[DataRequired()])
+    user_rating = IntegerField('', validators=[DataRequired()])
+    img_url = StringField('', validators=[DataRequired()])
+    rate_down = SubmitField('Disliked')
