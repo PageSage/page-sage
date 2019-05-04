@@ -63,13 +63,13 @@ def privacy():
 @app.route('/login')
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('profile'))
+        return redirect(url_for('profile',username=current_user.f_name))
     return render_template('authn/choose-login.html')
 
 @app.route('/google-login', methods=['GET', 'POST'])
 def google_login():
     if current_user.is_authenticated and google.authorized:
-        return redirect(url_for('profile'))
+        return redirect(url_for('profile',username=current_user.f_name))
     if (not google.authorized) and (not current_user.is_authenticated):
         return redirect(url_for('google.login'))
     try:
@@ -86,10 +86,10 @@ def google_login():
             login_user(user)
             current_user.login_method = "google"
             flash("Signed in with Google")
-            return redirect(url_for('profile'))
+            return redirect(url_for('profile',username=current_user.f_name))
     except (InvalidGrantError, TokenExpiredError) as e:
         return redirect(url_for("google.login"))
-    return redirect(url_for('profile'))
+    return redirect(url_for('profile',username=current_user.f_name))
 
 @app.route('/facebook-login', methods=['GET', 'POST'])
 def facebook_login():
@@ -160,13 +160,12 @@ def logout():
 
 ## All user routes should eventually be modified to have dynamic links
 ## such that the urls are /<username>/profile, etc.
-@app.route('/user')
-@app.route('/profile', methods=['GET', 'POST'])
+@app.route('/user/<string:username>', methods=['GET', 'POST'])
 @login_required
-def profile():
+def profile(username):
     form = SearchForm()
     search_form(form)
-    return render_template('user/profile.html', form=form)
+    return render_template('user/profile.html', form=form,username=current_user.f_name)
 
 def choose_label(label):
     if int(label) == 1:
@@ -177,10 +176,10 @@ def choose_label(label):
 
 ## Book should appear as /user/<book>
 ## Should book be moved to a more general page?
-@app.route('/user/<string:title>', methods=['GET', 'POST'])
-@app.route('/user/<string:title>/<string:bookid>', methods=['GET', 'POST'])
+@app.route('/user/<string:username>/<string:title>', methods=['GET', 'POST'])
+@app.route('/user/<string:username>/<string:title>/<string:bookid>', methods=['GET', 'POST'])
 @login_required
-def user_book(title, bookid=None):
+def user_book(username,title, bookid=None):
     inputValid = BookInputs(request)
     form = SearchForm()
 
@@ -218,13 +217,13 @@ def user_book(title, bookid=None):
             thumbnail = resp['volumeInfo']['imageLinks']['thumbnail']
         except(KeyError):
             thumbnail = url_for('static', filename='./img/cat.png')
-    
+
     try:
       googlelink= resp['volumeInfo']['previewLink']
     except (KeyError):
       googlelink = 'https://www.google.com'
-      
-    return render_template('user/book.html', form=form, bookid=bookid, SEARCH_KEY=SEARCH_KEY, bookTitle=title, author=author, thumbnail=thumbnail, googlelink=googlelink, bookDescription=description, label=label, percent=percent)
+
+    return render_template('user/book.html', form=form,username=current_user.f_name, bookid=bookid, SEARCH_KEY=SEARCH_KEY, bookTitle=title, author=author, thumbnail=thumbnail, googlelink=googlelink, bookDescription=description, label=label, percent=percent)
 
 #    title = form.title.data
 #    isbn = form.isbn.data
@@ -232,13 +231,14 @@ def user_book(title, bookid=None):
 
 
 
-@app.route('/my-shelf', methods=['GET', 'POST'])
+@app.route('/<string:username>/my-shelf', methods=['GET', 'POST'])
 @login_required
-def my_shelf():
+def my_shelf(username):
     form = SearchForm()
     search_form(form)
-    return render_template('user/my-shelf.html', form=form)
+    return render_template('user/my-shelf.html', form=form,username=current_user.f_name)
 
+  
 def read_shelf():
     return render_template('user/my-shelf.html', form=form)
 
@@ -246,9 +246,9 @@ def tbr_shelf():
     return render_template('user/my-shelf.html', form=form)
 
 
-@app.route('/user/search', methods=['GET', 'POST'])
+@app.route('/user/<string:username>/search', methods=['GET', 'POST'])
 @login_required
-def search():
+def search(username):
     form = SearchForm()
     maxResults = '40'
     orderBy = 'relevance'
@@ -277,14 +277,14 @@ def search():
     if form.validate_on_submit():
         flash('Search requested for {}'.format(form.search_item.data))
         return redirect('/user/search')
-    return render_template('user/search.html', form=form, SEARCH_KEY=SEARCH_KEY, resp=new_resp)
+    return render_template('user/search.html', form=form,username=current_user.f_name, SEARCH_KEY=SEARCH_KEY, resp=new_resp)
 
-@app.route('/user/settings', methods=['GET', 'POST'])
+@app.route('/user/<string:username>/settings', methods=['GET', 'POST'])
 @login_required
-def user_settings():
+def user_settings(username):
     form = SearchForm()
     search_form(form)
-    return render_template('user/settings.html', form=form)
+    return render_template('user/settings.html', form=form,username=current_user.f_name)
 
 
 #####################
