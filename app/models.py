@@ -21,8 +21,8 @@ class User(db.Model, UserMixin):
     profile_photo = db.Column(db.LargeBinary, nullable=True)
     algo = db.Column(db.LargeBinary, nullable=True)
 
-    read_books = db.relationship('read_books', backref=db.backref('user', lazy=True))
-    tbr_books = db.relationship('tbr_books', backref=db.backref('user', lazy=True))
+    read_books = db.relationship('Read_Books', backref=db.backref('read_user', lazy=True))
+    tbr_books = db.relationship('TBR_Books', backref=db.backref('tbr_user', lazy=True))
     # clubs = db.relationship('Bookclub', secondary=club_members, lazy='subquery', backref=db.backref('members', lazy=True))
     bookclubs = db.relationship('Bookclub', secondary='members')
 
@@ -30,7 +30,7 @@ class User(db.Model, UserMixin):
         return '<User {}>'.format(self.email)
 
 
-class ReadBooks(db.Model):
+class Read_Books(db.Model):
     __tablename__ = 'read_books'
     id = db.Column(db.Integer, primary_key=True)
     volume_id = db.Column(db.String(256))
@@ -39,7 +39,7 @@ class ReadBooks(db.Model):
     img_url = db.Column(db.String(512))
     user = db.Column(db.Integer, db.ForeignKey('user.id'))    
 
-    notes = db.relationshib('Notes', backref=db.backref('book_note', lazy=True))
+    notes = db.relationship('Read_Notes', backref=db.backref('book_note', lazy=True))
 
 
 class TBR_Books(db.Model):
@@ -49,9 +49,10 @@ class TBR_Books(db.Model):
     title = db.Column(db.String(512))
     user_pred = db.Column(db.String(32))
     img_url = db.Column(db.String(512))
+    readnig = db.Column(db.Boolean)
     user = db.Column(db.Integer, db.ForeignKey('user.id'))
 
-    notes = db.relationship('Notes', backref=db.backref('book_note', lazy=True))
+    notes = db.relationship('TBR_Notes', backref=db.backref('book_note', lazy=True))
 
 
 class Bookclub(db.Model):

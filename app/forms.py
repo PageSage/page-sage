@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from flask_inputs import Inputs
-from wtforms import StringField, SelectField, SubmitField
+from wtforms import StringField, SelectField, SubmitField, IntegerField
 from wtforms.validators import DataRequired, InputRequired
 from markupsafe import Markup
 
@@ -26,7 +26,7 @@ class RateBookUp(FlaskForm):
     rate_up = SubmitField('Liked')
 
 class RateBookDown(FlaskForm):
-    volume_id = String('', validators=[DataRequired()])
+    volume_id = StringField('', validators=[DataRequired()])
     user_rating = IntegerField('', validators=[DataRequired()])
     img_url = StringField('', validators=[DataRequired()])
     rate_down = SubmitField('Disliked')
