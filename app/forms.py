@@ -19,6 +19,11 @@ class AddBook(FlaskForm):
     user_pred = StringField('', validators=[DataRequired()])
     add_book = SubmitField('Add Book')
 
+class RemoveBook(FlaskForm):
+    volume_id = StringField('', validators=[DataRequired()])
+    user_pred = StringField('', validators=[DataRequired()])
+    add_book = SubmitField('Remove Book')
+
 class RateBookUp(FlaskForm):
     volume_id = StringField('', validators=[DataRequired()])
     user_rating = IntegerField('', validators=[DataRequired()])

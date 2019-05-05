@@ -5,9 +5,27 @@
     <header class="w3-container w3-dark-grey w3-center shadow">
         <h1 class="w3-margin w3-jumbo">User Profile</h1>
         <div class="w3-xlarge">
-            <a href="{{ url_for('user_book', title='last_title',bookid='bookidmissing',username=current_user.f_name) }}" class="text-light">
-            Books...
-            </a>
+            <h3>TBR Books</h3>
+            {% if tbr_books == None %}
+                <p>No Books on Shelf</p>
+            {% else %}
+                {% for book in tbr_books %}
+                    <div>
+                        <a href="{{ url_for('user_book', username=current_user.f_name, title=book.title, bookid=book.volume_id) }}">{{ book.title }}</a>
+                    </div>
+                {% endfor %}
+            {% endif %}
+            <br>
+            <h3>Read Books</h3>
+            {% if read_books == None %}
+                <p>No Books on Shelf</p>
+            {% else %}
+                {% for book in read_books %}
+                    <div>
+                        <a href="{{ url_for('user_book', username=current_user.f_name, title=book.title, bookid=book.volume_id) }}">{{ book.title }}</a>
+                    </div>
+                {% endfor %}
+            {% endif %}
         </div>
     </header>
     <!-- First Grid -->

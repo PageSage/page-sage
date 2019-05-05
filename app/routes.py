@@ -1,6 +1,6 @@
 from flask import render_template, session, abort, redirect, url_for, flash, request
 from app import app, db
-from app.forms import SearchForm, BookInputs
+from app.forms import SearchForm, BookInputs, RateBookUp, RateBookDown, AddBook, RemoveBook
 from flask_dance.consumer import oauth_authorized
 from flask_dance.contrib.google import google
 from flask_dance.contrib.facebook import facebook
@@ -8,7 +8,7 @@ from flask_inputs import Inputs
 import requests
 from flask_login import login_required, login_user, logout_user, current_user, login_manager
 from oauthlib.oauth2.rfc6749.errors import InvalidGrantError, TokenExpiredError, OAuth2Error
-from app.models import User, OAuth
+from app.models import User, OAuth, Read_Books, Read_Notes, TBR_Books, TBR_Notes, Bookclub, Club_Shelf, Forum_Posts, Forums, Members 
 import os
 import requests
 import re
@@ -19,6 +19,10 @@ from copy import deepcopy
 import copy
 
 SEARCH_KEY = os.environ.get('SEARCH_KEY')
+
+@app.before_first_request
+def create_tables():
+    db.create_all()
 
 ###########
 ## Forms ##
@@ -158,14 +162,18 @@ def logout():
 ## User Routes ##
 #################
 
-## All user routes should eventually be modified to have dynamic links
-## such that the urls are /<username>/profile, etc.
 @app.route('/user/<string:username>', methods=['GET', 'POST'])
 @login_required
 def profile(username):
     form = SearchForm()
     search_form(form)
-    return render_template('user/profile.html', form=form,username=current_user.f_name)
+    user = User.query.filter_by(email=current_user.email).first()
+
+    tbr_books = TBR_Books.query.filter(TBR_Books.user==user.id).all()
+
+    read_books = Read_Books.query.filter(Read_Books.user==user.id).all()
+
+    return render_template('user/profile.html', form=form,username=current_user.f_name, tbr_books=tbr_books, read_books=read_books)
 
 def choose_label(label):
     if int(label) == 1:
@@ -174,17 +182,22 @@ def choose_label(label):
         return 'not like'
 
 
-## Book should appear as /user/<book>
-## Should book be moved to a more general page?
 @app.route('/user/<string:username>/<string:title>', methods=['GET', 'POST'])
 @app.route('/user/<string:username>/<string:title>/<string:bookid>', methods=['GET', 'POST'])
+@app.route('/user/<string:username>/<string:title>/<string:bookid>/<string:method>', methods=['GET', 'POST'])
 @login_required
-def user_book(username,title, bookid=None):
+def user_book(username, title, bookid=None, method=None):
     inputValid = BookInputs(request)
     form = SearchForm()
+    rateUp = RateBookUp()
+    rateDown = RateBookDown()
+    addBook = AddBook()
+    removeBook = RemoveBook()
+    user = User.query.filter_by(email=current_user.email).first()
 
     if not inputValid.validate():
         return redirect('profile')
+   
     url = 'https://www.googleapis.com/books/v1/volumes/'+ bookid +"?key="+ SEARCH_KEY
     resp = requests.get(url)
     resp = resp.json()
@@ -195,8 +208,10 @@ def user_book(username,title, bookid=None):
 
     try:
         title = resp['volumeInfo']['title']
+        url_title = title.replace(' ','_')
     except (KeyError):
         title = 'Unknown'
+        url_title = 'Unknown'
 
     try:
         description = resp['volumeInfo']['description']
@@ -223,12 +238,56 @@ def user_book(username,title, bookid=None):
     except (KeyError):
       googlelink = 'https://www.google.com'
 
-    return render_template('user/book.html', form=form,username=current_user.f_name, bookid=bookid, SEARCH_KEY=SEARCH_KEY, bookTitle=title, author=author, thumbnail=thumbnail, googlelink=googlelink, bookDescription=description, label=label, percent=percent)
 
-#    title = form.title.data
-#    isbn = form.isbn.data
-#    return redirect('user_book',title=title,isbn=isbn)
+    if method == 'liked': 
+        book = Read_Books.query.filter(Read_Books.user==user.id, Read_Books.volume_id==bookid).first()
+        if book == None:
+            new_book = Read_Books(user=user.id, volume_id=bookid, title=title, user_rating=1, img_url=thumbnail)
+            db.session.add(new_book)
+            db.session.commit()
+        elif book.user_rating == 0:
+            book.user_rating = 1
+            db.session.commit()
+    elif method == 'disliked':
+        book = Read_Books.query.filter(Read_Books.user==user.id, Read_Books.volume_id==bookid).first()
+        if book == None:
+            new_book = Read_Books(user=user.id, volume_id=bookid, title=title, user_rating=0, img_url=thumbnail)
+            db.session.add(new_book)
+            db.session.commit()
+        elif book.user_rating == 1:
+            book.user_rating = 0
+            db.session.commit()
+    elif method == 'add':
+        book = TBR_Books.query.filter(TBR_Books.user==user.id, TBR_Books.volume_id==bookid).first()
+        if book == None:
+            new_book = TBR_Books(user=user.id, volume_id=bookid, title=title, user_pred=percent, img_url=thumbnail, reading=False)
+            db.session.add(new_book)
+            db.session.commit()
+    elif method == 'remove':
+        book = TBR_Books.query.filter(TBR_Books.user==user.id, TBR_Books.volume_id==bookid).first()
+        if book != None:
+            db.session.delete(book)
+            db.session.commit()
+    elif method == 'unrate':
+        book = Read_Books.query.filter(Read_Books.user==user.id, Read_Books.volume_id==bookid).first()
+        if book != None:
+            db.session.delete(book)
+            db.session.commit()
 
+    book = TBR_Books.query.filter(TBR_Books.user==user.id, TBR_Books.volume_id==bookid).first()
+    added = True
+    if book == None:
+        added = False
+
+    book = Read_Books.query.filter(Read_Books.user==user.id, Read_Books.volume_id==bookid).first()
+    if book == None:
+        rated = False
+    elif book.user_rating == 1:
+        rated = 1
+    elif book.user_rating == 0:
+        rated = 2
+
+    return render_template('user/book.html', form=form,username=current_user.f_name, bookid=bookid, SEARCH_KEY=SEARCH_KEY, bookTitle=title, author=author, thumbnail=thumbnail, googlelink=googlelink, bookDescription=description, label=label, percent=percent, url_title=url_title, added=added, rated=rated)
 
 
 @app.route('/<string:username>/my-shelf', methods=['GET', 'POST'])
@@ -238,11 +297,16 @@ def my_shelf(username):
     search_form(form)
     return render_template('user/my-shelf.html', form=form,username=current_user.f_name)
 
-  
-def read_shelf():
+@app.route('/<string:username>/read_shelf', methods=['GET', 'POST'])
+@login_required  
+def read_shelf(username):
+    form = SearchForm()
     return render_template('user/my-shelf.html', form=form)
 
-def tbr_shelf():
+@app.route('/<string:username>/tbr_shelf', methods=['GET', 'POST'])
+@login_required
+def tbr_shelf(username):
+    form = SearchForm()
     return render_template('user/my-shelf.html', form=form)
 
 

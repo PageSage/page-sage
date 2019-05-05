@@ -49,7 +49,7 @@ class TBR_Books(db.Model):
     title = db.Column(db.String(512))
     user_pred = db.Column(db.String(32))
     img_url = db.Column(db.String(512))
-    readnig = db.Column(db.Boolean)
+    reading = db.Column(db.Boolean)
     user = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     notes = db.relationship('TBR_Notes', backref=db.backref('book_note', lazy=True))
