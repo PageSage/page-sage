@@ -270,7 +270,7 @@ def user_book(username, title, bookid=None, method=None):
             db.session.add(new_book)
             db.session.commit()
     elif method == 'remove':
-        book = TBR_Books.query.filter(TBR_Books.useri==user.id, TBR_Books.volume_id==bookid).first()
+        book = TBR_Books.query.filter(TBR_Books.user==user.id, TBR_Books.volume_id==bookid).first()
         if book != None:
             db.session.delete(book)
             db.session.commit()
