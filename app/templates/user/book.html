@@ -17,25 +17,25 @@
       </div>
       <div class="form-inline">
 
-        {% if not rated  %}
+        {% if not rated %}
           <form action="{{ url_for('user_book',username=current_user.f_name, title=url_title, bookid=bookid, method='liked') }}" method="post" novalidate>
             <button alt='I liked this book' class="fas fa-heart"></button>
           </form>
           <form action="{{ url_for('user_book', username=current_user.f_name, title=url_title, bookid=bookid, method='disliked') }}" method="post" novalidate> 
             <button alt='I disliked this book' class="fas fa-heart-broken"></button>
           </form>
-        {% elif rated==1 %}
-          <form action="{{ url_for('user_book',username=current_user.f_name, title=url_title, bookid=bookid, method='liked') }}" method="post" novalidate>
+        {% elif (rated==1) %}
+          <form action="{{ url_for('user_book',username=current_user.f_name, title=url_title, bookid=bookid, method='unrate') }}" method="post" novalidate>
             <button alt='Unrate this book' class="fas fa-heart w3-blue"></button>
           </form>
           <form action="{{ url_for('user_book', username=current_user.f_name, title=url_title, bookid=bookid, method='disliked') }}" method="post" novalidate>
             <button alt='I disliked this book' class="fas fa-heart-broken"></button>
           </form>
-        {% else %}
+        {% elif (rated==2) %}
           <form action="{{ url_for('user_book',username=current_user.f_name, title=url_title, bookid=bookid, method='liked') }}" method="post" novalidate>
             <button alt='I liked this book' class="fas fa-heart"></button>
           </form>
-          <form action="{{ url_for('user_book', username=current_user.f_name, title=url_title, bookid=bookid, method='disliked') }}" method="post" novalidate>
+          <form action="{{ url_for('user_book', username=current_user.f_name, title=url_title, bookid=bookid, method='unrate') }}" method="post" novalidate>
             <button alt='Unrate this book' class="fas fa-heart-broken w3-red"></button>
           </form>
         {% endif %}

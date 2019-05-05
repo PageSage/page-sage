@@ -248,9 +248,6 @@ def user_book(username, title, bookid=None, method=None):
         elif book.user_rating == 0:
             book.user_rating = 1
             db.session.commit()
-        elif book.user_rating == 1:
-            db.session.delete(book)
-            db.session.commit()
     elif method == 'disliked':
         book = Read_Books.query.filter(Read_Books.user==user.id, Read_Books.volume_id==bookid).first()
         if book == None:
@@ -260,9 +257,6 @@ def user_book(username, title, bookid=None, method=None):
         elif book.user_rating == 1:
             book.user_rating = 0
             db.session.commit()
-        elif book.user_rating == 0:
-            db.session.delete(book)
-            db.session.commit()
     elif method == 'add':
         book = TBR_Books.query.filter(TBR_Books.user==user.id, TBR_Books.volume_id==bookid).first()
         if book == None:
@@ -271,6 +265,11 @@ def user_book(username, title, bookid=None, method=None):
             db.session.commit()
     elif method == 'remove':
         book = TBR_Books.query.filter(TBR_Books.user==user.id, TBR_Books.volume_id==bookid).first()
+        if book != None:
+            db.session.delete(book)
+            db.session.commit()
+    elif method == 'unrate':
+        book = Read_Books.query.filter(Read_Books.user==user.id, Read_Books.volume_id==bookid).first()
         if book != None:
             db.session.delete(book)
             db.session.commit()
@@ -286,7 +285,7 @@ def user_book(username, title, bookid=None, method=None):
     elif book.user_rating == 1:
         rated = 1
     elif book.user_rating == 0:
-        rated = 0
+        rated = 2
 
     return render_template('user/book.html', form=form,username=current_user.f_name, bookid=bookid, SEARCH_KEY=SEARCH_KEY, bookTitle=title, author=author, thumbnail=thumbnail, googlelink=googlelink, bookDescription=description, label=label, percent=percent, url_title=url_title, added=added, rated=rated)
 
