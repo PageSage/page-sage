@@ -254,7 +254,7 @@ def user_book(username, title, bookid=None, method=None):
     elif method == 'disliked':
         book = Read_Books.query.filter(Read_Books.user==user.id, Read_Books.volume_id==bookid).first()
         if book == None:
-            new_book = Read_Books(user=user.id, volume_id=bookid, title=title, user_rating=1, img_url=thumbnail)
+            new_book = Read_Books(user=user.id, volume_id=bookid, title=title, user_rating=0, img_url=thumbnail)
             db.session.add(new_book)
             db.session.commit()
         elif book.user_rating == 1:
