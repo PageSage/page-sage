@@ -11,8 +11,45 @@
     <span>
       <h1><b>{{ bookTitle }}</b></h1>
     </span>
-    <div id="green-bg" class="w3-card w3-border w3-round-xlarge w3-display-container" style="width:150px; height:35px">
-      <p class="w3-large w3-middle w3-text-white w3-center">{{ percent }}% Charm</p>
+    <div class='w3-display-container'>
+      <div id="green-bg" class="w3-card w3-border w3-round-xlarge w3-display-container" style="width:150px; height:35px">
+        <p class="w3-large w3-middle w3-text-white w3-center">{{ percent }}% Charm</p>
+      </div>
+      <div class="form-inline">
+
+        {% if not rated  %}
+          <form action="{{ url_for('user_book',username=current_user.f_name, title=url_title, bookid=bookid, method='liked') }}" method="post" novalidate>
+            <button alt='I liked this book' class="fas fa-heart"></button>
+          </form>
+          <form action="{{ url_for('user_book', username=current_user.f_name, title=url_title, bookid=bookid, method='disliked') }}" method="post" novalidate> 
+            <button alt='I disliked this book' class="fas fa-heart-broken"></button>
+          </form>
+        {% elif rated==1 %}
+          <form action="{{ url_for('user_book',username=current_user.f_name, title=url_title, bookid=bookid, method='liked') }}" method="post" novalidate>
+            <button alt='Unrate this book' class="fas fa-heart w3-blue"></button>
+          </form>
+          <form action="{{ url_for('user_book', username=current_user.f_name, title=url_title, bookid=bookid, method='disliked') }}" method="post" novalidate>
+            <button alt='I disliked this book' class="fas fa-heart-broken"></button>
+          </form>
+        {% else %}
+          <form action="{{ url_for('user_book',username=current_user.f_name, title=url_title, bookid=bookid, method='liked') }}" method="post" novalidate>
+            <button alt='I liked this book' class="fas fa-heart"></button>
+          </form>
+          <form action="{{ url_for('user_book', username=current_user.f_name, title=url_title, bookid=bookid, method='disliked') }}" method="post" novalidate>
+            <button alt='Unrate this book' class="fas fa-heart-broken w3-blue"></button>
+          </form>
+        {% endif %}
+
+        {% if not added %}
+          <form action="{{ url_for('user_book', username=current_user.f_name, title=url_title, bookid=bookid, method='add') }}" method="post" novalidate>
+            <button alt='Add to your "To Be Read Bookshelf"'>Add to 'TBR'</button>
+          </form>
+        {% else %}
+          <form action="{{ url_for('user_book', username=current_user.f_name, title=url_title, bookid=bookid, method='remove') }}" method="post" novalidate>
+            <button alt='Remove from your "To Be Read Bookshelf"'>Remove from 'TBR'</button>
+          </form>
+        {% endif %}
+      </div>
     </div>
     <h3><b>Author:</b> {{ author[0] }}</h3>
     <p class="w3-large"><b>Description:</b> {{ bookDescription }}</p>
