@@ -1,6 +1,7 @@
 {% extends "user/header.html" %}
 
 {% block content %}
+<div class="external w3-display-container w3-container shadow w3-text-white" style="height:10000px;">
     <h1>User Settings</h1>
 
     <h2>Classifier/Recommendation Engine</h2>
@@ -16,7 +17,7 @@
     {% elif enough and not has_classifier %}
         <h4>You have enough entries to train your own classifier!</h4>
         <form action="{{ url_for('user_settings', username=current_user.f_name, action='train') }}" method="post" novalidate>
-            <button alt='Train your own classifier'>Train My Personal Classifier!</button>
+            <button class="btn w3-white w3-text-black" alt='Train your own classifier'>Train My Personal Classifier!</button>
         </form>
         <b>This process may take a minute or two | Please do not refresh the browser if it appears stuck!</b>
     {% elif not enough %}
@@ -25,9 +26,9 @@
     {% endif %}
 
     {% if not balance %}
-        <h5 class='w3-red'>We recommend having as close to the same number of ratings in each category before training your personalized classifier</h5>
+        <h5 class='w3-text-red'>We recommend having as close to the same number of ratings in each category before training your personalized classifier</h5>
     {% else %}
-        <h5 class='w3-green'>Your ratings in each category seem close enough to create a good classifier</h5>
+        <h5 class='w3-text-green'>Your ratings in each category seem close enough to create a good classifier</h5>
     {% endif %}
 
     <br>
@@ -37,11 +38,13 @@
     <form action="{{ url_for('user_settings', username=username, action='change_username') }}" method="post">
         <div class="form-inline">
             {{ change_username.new_username(size=32, class_="form-control mr-sm-2 mt-2 mt-md-0 pl-3", style="width: 200px;") }}
-            {{ change_username.change() }}
+            {{ change_username.change(class_="btn w3-white w3-text-black") }}
         </div>
         {% for error in change_username.new_username.errors %}
             <p class="w3-red">{{ error }}</p>
         {% endfor %}
     </form>
+
+</div>
     
 {% endblock %}
