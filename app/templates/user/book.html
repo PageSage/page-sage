@@ -18,24 +18,24 @@
       <p class="w3-large w3-middle w3-text-green">{{ percent }}% Charm</p>
       <div class="form-inline">
         {% if not rated %}
-          <form action="{{ url_for('user_book',username=current_user.f_name, title=url_title, bookid=bookid, method='liked') }}" method="post" novalidate>
+          <form action="{{ url_for('user_book',username=current_user.username, title=url_title, bookid=bookid, method='liked') }}" method="post" novalidate>
               <button class="btn w3-large w3-hover-white" alt='I liked this book'><i class="fas fa-heart w3-text-white"></i></button>
           </form>
-          <form action="{{ url_for('user_book', username=current_user.f_name, title=url_title, bookid=bookid, method='disliked') }}" method="post" novalidate> 
+          <form action="{{ url_for('user_book', username=current_user.username, title=url_title, bookid=bookid, method='disliked') }}" method="post" novalidate> 
             <button alt='I disliked this book' class="btn w3-large w3-hover-white"><i class="fas fa-heart-broken w3-text-white"></i></button>
           </form>
         {% elif (rated==1) %}
-          <form action="{{ url_for('user_book',username=current_user.f_name, title=url_title, bookid=bookid, method='unrate') }}" method="post" novalidate>
+          <form action="{{ url_for('user_book',username=current_user.username, title=url_title, bookid=bookid, method='unrate') }}" method="post" novalidate>
             <button class="btn w3-large w3-hover-white" alt='Unrate this book'><i class="fas fa-heart w3-text-green"></i></button>
           </form>
-          <form action="{{ url_for('user_book', username=current_user.f_name, title=url_title, bookid=bookid, method='disliked') }}" method="post" novalidate>
+          <form action="{{ url_for('user_book', username=current_user.username, title=url_title, bookid=bookid, method='disliked') }}" method="post" novalidate>
             <button class="btn w3-large w3-hover-white" alt='I disliked this book'><i class="fas fa-heart-broken w3-text-white"></i></button>
           </form>
         {% elif (rated==2) %}
-          <form action="{{ url_for('user_book',username=current_user.f_name, title=url_title, bookid=bookid, method='liked') }}" method="post" novalidate>
+          <form action="{{ url_for('user_book',username=current_user.username, title=url_title, bookid=bookid, method='liked') }}" method="post" novalidate>
             <button class="btn w3-large w3-hover-white" alt='I liked this book'><i class="fas fa-heart w3-text-white"></i></button>
           </form>
-          <form action="{{ url_for('user_book', username=current_user.f_name, title=url_title, bookid=bookid, method='unrate') }}" method="post" novalidate>
+          <form action="{{ url_for('user_book', username=current_user.username, title=url_title, bookid=bookid, method='unrate') }}" method="post" novalidate>
             <button class="btn w3-large w3-hover-white" alt='Unrate this book'><i class="fas fa-heart-broken w3-text-red"></i></button>
           </form>
         {% endif %}
@@ -52,13 +52,13 @@
         </button>
 
       {% if not added %}
-        <form action="{{ url_for('user_book', username=current_user.f_name, title=url_title, bookid=bookid, method='add') }}" method="post" novalidate>
+        <form action="{{ url_for('user_book', username=current_user.username, title=url_title, bookid=bookid, method='add') }}" method="post" novalidate>
           <button class="btn w3-large w3-text-white w3-hover-white" alt='Add to your "To Be Read Bookshelf"'>
             <i class="fas fa-plus-circle" style="padding-right: 10px"></i>Add to 'TBR'
           </button>
         </form>
       {% else %}
-        <form action="{{ url_for('user_book', username=current_user.f_name, title=url_title, bookid=bookid, method='remove') }}" method="post" novalidate>
+        <form action="{{ url_for('user_book', username=current_user.username, title=url_title, bookid=bookid, method='remove') }}" method="post" novalidate>
           <button class="btn w3-large w3-text-white w3-hover-white" alt='Remove from your "To Be Read Bookshelf"'>
             <i class="fas fa-times-circle" style="padding-right: 10px"></i>Remove from 'TBR'
           </button>

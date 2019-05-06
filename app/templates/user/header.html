@@ -25,7 +25,7 @@
     <div id="sidebar-bg" class="w3-hide-small w3-sidebar w3-dark-grey w3-bar-block w3-card w3-animate-left sidebar" style="display:none; opacity: .95;">
 
         <!-- Medium and Large Screens -->
-        <a href="{{ url_for('my_shelf',username=current_user.f_name) }}" class="w3-hide-small w3-bar-item w3-button bg-transparent w3-padding-large w3-hover-white w3-large text-light" title="My Bookshelf">
+        <a href="{{ url_for('my_shelf',username=current_user.username) }}" class="w3-hide-small w3-bar-item w3-button bg-transparent w3-padding-large w3-hover-white w3-large text-light" title="My Bookshelf">
             <i title="My Shelf" class="fas fa-align-left fa-rotate-270"></i>
             Shelf
         </a>
@@ -48,7 +48,7 @@
         <a class="w3-hide-medium w3-hide-large w3-bar-item w3-button bg-transparent w3-padding w3-hover-white w3-xlarge text-light w3-right" onclick="toggleSmallSidebar()">
             <i title="Close Sidebar" class="fas fa-times w3-right"></i>
         </a>
-        <a href="{{ url_for('my_shelf',username=current_user.f_name) }}" class="w3-hide-medium w3-hide-large w3-bar-item w3-button bg-transparent w3-padding w3-hover-white w3-xlarge text-light">
+        <a href="{{ url_for('my_shelf',username=current_user.username) }}" class="w3-hide-medium w3-hide-large w3-bar-item w3-button bg-transparent w3-padding w3-hover-white w3-xlarge text-light">
             <i title="My Shelf" class="fas fa-align-left fa-rotate-270"></i>
             Shelf
         </a>
@@ -70,7 +70,7 @@
     <!-- Footer -->
     <div class="w3-bottom">
         <div class="w3-bar w3-card w3-center w3-small w3-padding-small w3-grey">
-            <a href="{{ url_for('user_settings',username=current_user.f_name) }}" class="w3-bar-item w3-button bg-transparent w3-padding-large w3-hover-white text-dark" title="User Settings">
+            <a href="{{ url_for('user_settings',username=current_user.username) }}" class="w3-bar-item w3-button bg-transparent w3-padding-large w3-hover-white text-dark" title="User Settings">
                 <i title="User Settings" class="fas fa-cog"></i>
             </a>
             <a href="{{ url_for('terms') }}" class="w3-bar-item w3-button bg-transparent w3-padding w3-hover-white text-light w3-right" title="Toggle Navigation Menu">
@@ -96,20 +96,20 @@
                 <a class="w3-hide-medium w3-hide-large w3-bar-item w3-button bg-transparent w3-padding-large w3-hover-white w3-large text-light" onclick="toggleSmallSidebar()" title="Toggle Navigation Menu">
                     <i class="fas fa-bars"></i>
                 </a>
-                <a href="{{ url_for('profile',username=current_user.f_name) }}" class="w3-bar-item w3-button bg-transparent w3-padding-large w3-hover-white w3-large text-light" title="User Page">
+                <a href="{{ url_for('profile',username=current_user.username) }}" class="w3-bar-item w3-button bg-transparent w3-padding-large w3-hover-white w3-large text-light" title="User Page">
                     <i class="fas fa-book-reader"></i>
                 </a>
-                <a class="w3-hide-small w3-hide-medium w3-bar-item bg-transparent w3-padding-large w3-large text-light">{{ current_user.f_name }}</a>
+                <a class="w3-hide-small w3-hide-medium w3-bar-item bg-transparent w3-padding-large w3-large text-light">{{ current_user.username }}</a>
 
                 <!-- Right justified  -->
                 <a href="{{ url_for('logout') }}" class="w3-bar-item w3-right w3-button bg-transparent w3-padding-large w3-hover-white w3-large text-light" title="User Page">
                     <i class="fas fa-sign-out-alt"></i>
                 </a>
-                <a href="{{ url_for('search',username=current_user.f_name) }}" class="w3-hide-medium w3-hide-large w3-bar-item w3-right w3-button bg-transparent w3-padding-large w3-hover-white w3-large text-light" title="search">
+                <a href="{{ url_for('search',username=current_user.username) }}" class="w3-hide-medium w3-hide-large w3-bar-item w3-right w3-button bg-transparent w3-padding-large w3-hover-white w3-large text-light" title="search">
                     <i class="fas fa-search"></i>
                 </a>
                 <div id="search-form-header" class="w3-hide-small w3-bar-item py-2 w3-right">
-                    <form action="{{ url_for('search',username=current_user.f_name) }}" method="post" novalidate>
+                    <form action="{{ url_for('search',username=current_user.username) }}" method="post" novalidate>
                         <div class="form-inline">
                             {{ form.search_item(size=32, id="search", class_="form-control mr-sm-2 mt-2 mt-md-0 pl-3 search-bar", style="width: 200px;", onclick="hideStyle()") }}
                             {{ form.search(class_="btn btn-outline-dark text-light my-2 my-sm-0 search-button search-icon") }}
