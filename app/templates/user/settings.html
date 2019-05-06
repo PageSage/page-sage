@@ -4,6 +4,10 @@
     <h1>User Settings</h1>
 
     <h2>Classifier/Recommendation Engine</h2>
+        <h4>Your rating balance is:</h4>
+        <h5>{{ book_balance }}</h5>
+        <h4>Total Number of Books Rated:</h4>
+        <h5>{{ num_books }}</h5>
     {% if enough and has_classifier and not trained %}
         <h4>You have a classifier!</h4>
     {% elif enough and trained %}
@@ -17,6 +21,12 @@
     {% elif not enough %}
         <h4>You do not have enough read books to train your own classifier</h4>
         <h4>You will continue to use the default</h4>
+    {% endif %}
+
+    {% if not balance %}
+        <h5 class='w3-red'>We recommend having as close to the same number of ratings in each category before training your personalized classifier</h5>
+    {% else %}
+            <h5 class='w3-green'>Your ratings in each category seem close enough to create a good classifier</h5>
     {% endif %}
 
     <br>

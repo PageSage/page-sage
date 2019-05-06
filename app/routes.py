@@ -364,6 +364,8 @@ def user_settings(username, action=None, classifier=None):
 
     user = User.query.filter(User.id==current_user.id).first()
 
+    num_books = len(read_books)
+
     defaults = {'fantasy_scifi' : './app/recommendations/fantasy_scify.pkl',
                 'mystery'       : './app/recommendations/mystery.pkl',
                 'ya_fantasy'    : './app/recommendations/ya_fantasy.pkl',
@@ -388,8 +390,28 @@ def user_settings(username, action=None, classifier=None):
                 'sports'        : './app/recommendations/sports.pkl'
                }
 
-    if len(read_books) >= 20:
+    balance = False
+
+    book_balance = False
+
+    if num_books == 0:
+        book_balance = 'Liked Books: {} / Disliked Books: {}'.format(0, 0)
+    elif num_books > 0:
+        num_labels = {1 : 0,
+                      0 : 0}
+        for book in read_books:
+            num_labels[int(book.user_rating)] += 1
+        book_balance = 'Liked Books: {} / Disliked Books: {}'.format(num_labels[1], num_labels[0])
+
+    if num_books >= 20:
         enough = True
+        if num_labels[0] != 0:
+            balance_stat = num_labels[1]/num_labels[0]
+        else:
+            balance_stat = 2.0
+        if (balance_stat <= 1.1) and (balance_stat >= 0.9):
+            balance = True
+        
 
     if user.algo != None:
         has_classifier = True
@@ -399,7 +421,7 @@ def user_settings(username, action=None, classifier=None):
             ratings = []
             books = []
             for item in read_books:
-                ratings.append(item.user_rating)
+                ratings.append(int(item.user_rating))
                 books.append(item.volume_id)
             algo = BookClassifier(volumes=books, ratings=ratings)
             algo.fit()
@@ -413,7 +435,7 @@ def user_settings(username, action=None, classifier=None):
         filename = default[classifier]
         # This should change which default classifier is used in user_books and show which was chosen here
 
-    return render_template('user/settings.html', form=form,username=current_user.f_name, enough=enough, has_classifier=has_classifier, trained=trained)
+    return render_template('user/settings.html', form=form,username=current_user.f_name, enough=enough, has_classifier=has_classifier, trained=trained, book_balance=book_balance, balance=balance, num_books=num_books)
 
 
 #####################
