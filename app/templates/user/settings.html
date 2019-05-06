@@ -18,6 +18,7 @@
         <form action="{{ url_for('user_settings', username=current_user.f_name, action='train') }}" method="post" novalidate>
             <button alt='Train your own classifier'>Train My Personal Classifier!</button>
         </form>
+        <b>This process may take a minute or two | Please do not refresh the browser if it appears stuck!</b>
     {% elif not enough %}
         <h4>You do not have enough read books to train your own classifier</h4>
         <h4>You will continue to use the default</h4>
@@ -26,12 +27,30 @@
     {% if not balance %}
         <h5 class='w3-red'>We recommend having as close to the same number of ratings in each category before training your personalized classifier</h5>
     {% else %}
-            <h5 class='w3-green'>Your ratings in each category seem close enough to create a good classifier</h5>
+        <h5 class='w3-green'>Your ratings in each category seem close enough to create a good classifier</h5>
     {% endif %}
 
     <br>
     <br>
     <h2>Username</h2>
-    <h4>You cannot change your username yet!  Keep tuned for future details!</h4>
-
+    <h4>Your current username is: {{ username }}</h4>
+    <form action="{{ url_for('user_settings', username=username, action='change_username') }}" method="post">
+        <div class="form-inline">
+            {{ change_username.new_username(size=32, class_="form-control mr-sm-2 mt-2 mt-md-0 pl-3", style="width: 200px;") }}
+            {{ change_username.change() }}
+        </div>
+        {% for error in change_username.new_username.errors %}
+            <p class="w3-red">{{ error }}</p>
+        {% endfor %}
+    </form>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul class=flashes>
+            {% for category, message in messages %}
+                <li class="{{ category }}">{{ category }} : {{ messages }}</li>
+            {% endfor %}
+            </ul>
+  {% endif %}
+{% endwith %}
+    
 {% endblock %}

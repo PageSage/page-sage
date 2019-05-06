@@ -7,7 +7,7 @@
             <div class="w3-bar w3-white w3-card w3-round" style="width: 290px">
                 <div class="w3-bar-item w3-bar-block w3-card w3-center">
                     <a class="w3-bar-item w3-white w3-button bg-transparent w3-padding w3-hover-white w3-large">
-                        <form action="{{ url_for('search',username=current_user.f_name) }}" method="post" novalidate>
+                        <form action="{{ url_for('search',username=current_user.username) }}" method="post" novalidate>
                             <div class="form-inline">
                                 {{ form.search_item(size=50, id="search", class_="form-control mr-sm-2 mt-2 mt-md-0 search-bar w3-center", style="width: 68%;", onclick="hideStyle()") }}
                                 {{ form.search(class_="btn w3-border w3-text-grey search-button", style="margin-top: 8px; width: 32%") }}
@@ -30,7 +30,7 @@
             <!-- <h3>Results:</h3> -->
             <p id="results" style="color:black;"></p>
             {% for book in resp %}
-            <a href="{{url_for('user_book', title=book[2], bookid=book[1],username=current_user.f_name)}}">
+            <a href="{{url_for('user_book', title=book[2], bookid=book[1],username=current_user.username)}}">
                 <div class="w3-third w3-hover-opacity w3-container w3-display-container" style="height:375px;">
                     <img class="thumbnail w3-display-middle w3-padding-large" src='{{ book[3] }}'>
                     <p class="w3-display-topmiddle w3-large" style="text-align: center;"><b>{{ book[0] }}</b></p>
