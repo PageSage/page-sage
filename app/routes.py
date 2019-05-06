@@ -194,10 +194,6 @@ def choose_label(label):
 def user_book(username, title, bookid=None, method=None):
     inputValid = BookInputs(request)
     form = SearchForm()
-    rateUp = RateBookUp()
-    rateDown = RateBookDown()
-    addBook = AddBook()
-    removeBook = RemoveBook()
     user = User.query.filter_by(email=current_user.email).first()
 
     if not inputValid.validate():
@@ -297,7 +293,7 @@ def user_book(username, title, bookid=None, method=None):
     elif book.user_rating == 0:
         rated = 2
 
-    return render_template('user/book.html', form=form,username=current_user.username, bookid=bookid, SEARCH_KEY=SEARCH_KEY, bookTitle=title, author=author, thumbnail=thumbnail, googlelink=googlelink, bookDescription=description, label=label, percent=percent, url_title=url_title, added=added, rated=rated)
+    return render_template('user/book.html', form=form, username=current_user.username, bookid=bookid, SEARCH_KEY=SEARCH_KEY, bookTitle=title, author=author, thumbnail=thumbnail, googlelink=googlelink, bookDescription=description, label=label, percent=percent, url_title=url_title, added=added, rated=rated)
 
 
 @app.route('/<string:username>/my-shelf', methods=['GET', 'POST'])
@@ -328,6 +324,8 @@ def search(username):
     orderBy = 'relevance'
     printType = 'books'
     projection = 'full'
+    if form.search_item.data == None:
+        return render_template('user/search.html', form=form, username=current_user.username, resp=None)
     url = 'https://www.googleapis.com/books/v1/volumes?q=' + form.search_item.data + '&maxResults=' + maxResults + '&orderBy=' + orderBy + '&printType=' + printType + '&projection=' + projection + '&key=' + SEARCH_KEY
     resp = requests.get(url)
     if resp.ok:
@@ -351,7 +349,7 @@ def search(username):
     if form.validate_on_submit():
         flash('Search requested for {}'.format(form.search_item.data))
         return redirect('/user/search')
-    return render_template('user/search.html', form=form,username=current_user.username, SEARCH_KEY=SEARCH_KEY, resp=new_resp)
+    return render_template('user/search.html', form=form, username=current_user.username, resp=new_resp)
 
 @app.route('/user/<string:username>/settings', methods=['GET', 'POST'])
 @app.route('/user/<string:username>/settings/<string:action>', methods=['GET', 'POST'])

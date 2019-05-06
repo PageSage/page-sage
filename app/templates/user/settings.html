@@ -43,14 +43,5 @@
             <p class="w3-red">{{ error }}</p>
         {% endfor %}
     </form>
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            <ul class=flashes>
-            {% for category, message in messages %}
-                <li class="{{ category }}">{{ category }} : {{ messages }}</li>
-            {% endfor %}
-            </ul>
-  {% endif %}
-{% endwith %}
     
 {% endblock %}
