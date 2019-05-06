@@ -2,34 +2,37 @@
 
 {% block content %}
     <!-- Books/Main -->
-    <header class="w3-container w3-dark-grey w3-center shadow">
-        <h1 class="w3-margin w3-jumbo">User Profile</h1>
+    <header class="w3-container external w3-center shadow">
         <div class="w3-xlarge">
-            <h3>TBR Books</h3>
-            {% if tbr_books == None %}
-                <p>No Books on Shelf</p>
+            <h3 class="w3-text-white">TBR</h3>
+            {% if not tbr_books %}
+                <h4>No Books on Shelf</h4>
             {% else %}
+                <div class="scrollmenu">
                 {% for book in tbr_books %}
-                    <div>
-                        <a href="{{ url_for('user_book', username=current_user.f_name, title=book.title, bookid=book.volume_id) }}">{{ book.title }}</a>
-                    </div>
+                      <a href="{{ url_for('user_book', username=current_user.f_name, title=book.title, bookid=book.volume_id) }}">
+                        <img class="thumbnail internal" src='{{ book.img_url }}'>
+                      </a>
                 {% endfor %}
+              </div>
             {% endif %}
             <br>
-            <h3>Read Books</h3>
-            {% if read_books == None %}
-                <p>No Books on Shelf</p>
+            <h3 class="w3-text-white">Read</h3>
+            {% if not read_books %}
+                <h4>No Books on Shelf</h4>
             {% else %}
+              <div class="scrollmenu">
                 {% for book in read_books %}
-                    <div>
-                        <a href="{{ url_for('user_book', username=current_user.f_name, title=book.title, bookid=book.volume_id) }}">{{ book.title }}</a>
-                    </div>
+                  <a href="{{ url_for('user_book', username=current_user.f_name, title=book.title, bookid=book.volume_id) }}">
+                      <img class="thumbnail w3-padding" src='{{ book.img_url }}'>
+                  </a>
                 {% endfor %}
+              </div>
             {% endif %}
         </div>
     </header>
     <!-- First Grid -->
-    <div id="green-bg" class="w3-row-padding w3-padding-64 w3-container shadow">
+    <div id="green-bg" class="green-trans w3-row-padding w3-padding-64 w3-container shadow">
         <div class="w3-content">
           <div class="w3-twothird">
             <h1 class="text-light">Messages</h1>
@@ -43,7 +46,7 @@
       </div>
 
       <!-- Second Grid -->
-    <div class="w3-row-padding w3-grey w3-padding-64 w3-container shadow">
+    <div id="trans" class="w3-row-padding w3-grey w3-padding-64 w3-container shadow">
         <div class="w3-content">
           <a href="{{ url_for('search',username=current_user.f_name) }}" class="w3-third w3-center">
             <i class="fas fa-plus text-light w3-padding-64 w3-margin-right" style="font-size: 100px"></i>

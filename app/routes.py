@@ -173,6 +173,11 @@ def profile(username):
 
     read_books = Read_Books.query.filter(Read_Books.user==user.id).all()
 
+    if tbr_books == None:
+        tbr_books = False
+    if read_books == None:
+        read_books = False
+
     return render_template('user/profile.html', form=form,username=current_user.f_name, tbr_books=tbr_books, read_books=read_books)
 
 def choose_label(label):
