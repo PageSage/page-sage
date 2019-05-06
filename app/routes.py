@@ -84,7 +84,7 @@ def google_login():
             f_name = account_info_json["given_name"]
             user = User.query.filter_by(email=email).first()
             if user is None:
-                user = User(email=email, f_name=f_name)
+                user = User(email=email, f_name=f_name, algo=None)
                 db.session.add(user)
                 db.session.commit()
             login_user(user)
@@ -197,7 +197,7 @@ def user_book(username, title, bookid=None, method=None):
 
     if not inputValid.validate():
         return redirect('profile')
-   
+ 
     url = 'https://www.googleapis.com/books/v1/volumes/'+ bookid +"?key="+ SEARCH_KEY
     resp = requests.get(url)
     resp = resp.json()
@@ -219,8 +219,13 @@ def user_book(username, title, bookid=None, method=None):
     except (KeyError):
         description = 'No description available'
 
-    default_model = BookClassifier
-    default_model = pickle.load(open('./app/recommendations/emily_model.pkl', 'rb'))
+    if user.algo == None:
+        default_model = BookClassifier
+        default_model = pickle.load(open('./app/recommendations/emily_model.pkl', 'rb'))
+    else:
+        default_model = BookClassifier
+        default_model = pickle.loads(user.algo)
+
     predictions = default_model.predict(bookid)
     percent = str('%.0f' % (predictions[1][0][1]*100))
     label = 'appeal'
@@ -344,11 +349,71 @@ def search(username):
     return render_template('user/search.html', form=form,username=current_user.f_name, SEARCH_KEY=SEARCH_KEY, resp=new_resp)
 
 @app.route('/user/<string:username>/settings', methods=['GET', 'POST'])
+@app.route('/user/<string:username>/settings/<string:action>', methods=['GET', 'POST'])
+@app.route('/user/<string:username>/settings/<string:action>/<string:classifier>', methods=['GET', 'POST'])
 @login_required
-def user_settings(username):
+def user_settings(username, action=None, classifier=None):
     form = SearchForm()
     search_form(form)
-    return render_template('user/settings.html', form=form,username=current_user.f_name)
+
+    enough = False
+    has_classifier = False
+    trained = False
+
+    read_books = Read_Books.query.filter(Read_Books.user==current_user.id).all()
+
+    user = User.query.filter(User.id==current_user.id).first()
+
+    defaults = {'fantasy_scifi' : './app/recommendations/fantasy_scify.pkl',
+                'mystery'       : './app/recommendations/mystery.pkl',
+                'ya_fantasy'    : './app/recommendations/ya_fantasy.pkl',
+                'ya_romance'    : './app/recommendations/ya_romance.pkl',
+                'biography'     : './app/recommendations/biography.pkl',
+                'fiction'       : './app/recommendations/fiction.pkl',
+                'history'       : './app/recommendations/history.pkl',
+                'classics'      : './app/recommendations/classics.pkl',
+                'science'       : './app/recommendations/science.pkl',
+                'ya'            : './app/recommendations/ya.pkl',
+                'poetry'        : './app/recommendations/poetry.pkl',
+                'philosophy'    : './app/recommendations/philosophy.pkl',
+                'horror'        : './app/recommendations/horror.pkl',
+                'contemporary'  : './app/recommendations/contemporary.pkl',
+                'crime'         : './app/recommendations/crime.pkl',
+                'art'           : './app/recommendations/art.pkl',
+                'christian'     : './app/recommendations/christian.pkl',
+                'religion'      : './app/recommendations/religion.pkl',
+                'romance'       : './app/recommendations/romance.pkl',
+                'psychology'    : './app/recommendations/psychology.pkl',
+                'travel'        : './app/recommendations/travel.pkl',
+                'sports'        : './app/recommendations/sports.pkl'
+               }
+
+    if len(read_books) >= 20:
+        enough = True
+
+    if user.algo != None:
+        has_classifier = True
+
+    if (action == 'train'):
+        if enough:
+            ratings = []
+            books = []
+            for item in read_books:
+                ratings.append(item.user_rating)
+                books.append(item.volume_id)
+            algo = BookClassifier(volumes=books, ratings=ratings)
+            algo.fit()
+            data = pickle.dumps(algo)
+            user.algo = data
+            db.session.commit()
+            trained = True
+    if (action == 'change_username'):
+        pass
+    if (action == 'default_classifier'):
+        filename = default[classifier]
+        # This should change which default classifier is used in user_books and show which was chosen here
+
+    return render_template('user/settings.html', form=form,username=current_user.f_name, enough=enough, has_classifier=has_classifier, trained=trained)
 
 
 #####################

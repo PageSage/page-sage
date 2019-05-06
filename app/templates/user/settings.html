@@ -2,4 +2,26 @@
 
 {% block content %}
     <h1>User Settings</h1>
+
+    <h2>Classifier/Recommendation Engine</h2>
+    {% if enough and has_classifier and not trained %}
+        <h4>You have a classifier!</h4>
+    {% elif enough and trained %}
+        <h4>You have successfully trained your classifier!</h4>
+        <h4>Go ahead and try it out!</h4>
+    {% elif enough and not has_classifier %}
+        <h4>You have enough entries to train your own classifier!</h4>
+        <form action="{{ url_for('user_settings', username=current_user.f_name, action='train') }}" method="post" novalidate>
+            <button alt='Train your own classifier'>Train My Personal Classifier!</button>
+        </form>
+    {% elif not enough %}
+        <h4>You do not have enough read books to train your own classifier</h4>
+        <h4>You will continue to use the default</h4>
+    {% endif %}
+
+    <br>
+    <br>
+    <h2>Username</h2>
+    <h4>You cannot change your username yet!  Keep tuned for future details!</h4>
+
 {% endblock %}
