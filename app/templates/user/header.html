@@ -22,7 +22,7 @@
 
 <body class="bgimg main-scheme">
     <!-- Side Navbar -->
-    <div id="sidebar-bg" class="w3-hide-small w3-sidebar w3-dark-grey w3-bar-block w3-card w3-animate-left sidebar" style="display:none; opacity: .85;">
+    <div id="sidebar-bg" class="w3-hide-small w3-sidebar w3-dark-grey w3-bar-block w3-card w3-animate-left sidebar" style="display:none; opacity: .95;">
 
         <!-- Medium and Large Screens -->
         <a href="{{ url_for('my_shelf',username=current_user.f_name) }}" class="w3-hide-small w3-bar-item w3-button bg-transparent w3-padding-large w3-hover-white w3-large text-light" title="My Bookshelf">
@@ -44,7 +44,7 @@
     </div>
 
     <!-- Small Screens -->
-    <div id="sidebar" class="w3-hide-medium w3-hide-large w3-dark-grey w3-sidebar w3-bar-block w3-card w3-animate-left sidebar" style="display:none;">
+    <div id="sidebar" class="w3-hide-medium w3-hide-large w3-dark-grey w3-sidebar w3-bar-block w3-card w3-animate-left sidebar" style="display:none; opacity: .95;">
         <a class="w3-hide-medium w3-hide-large w3-bar-item w3-button bg-transparent w3-padding w3-hover-white w3-xlarge text-light w3-right" onclick="toggleSmallSidebar()">
             <i title="Close Sidebar" class="fas fa-times w3-right"></i>
         </a>
@@ -89,7 +89,7 @@
     <div id="main">
         <!-- Top Navbar -->
         <div class="top">
-            <div id="trans" class="w3-bar w3-dark-grey w3-card w3-large">
+            <div class="w3-bar w3-dark-grey w3-card w3-large" style="opacity: .95;">
                 <a class="w3-hide-small w3-bar-item w3-button bg-transparent w3-padding-large w3-hover-white w3-large text-light" onclick="toggleSidebar()" title="Toggle Navigation Menu">
                     <i class="fas fa-bars"></i>
                 </a>

@@ -1,20 +1,22 @@
 {% extends "user/header.html" %}
 
 {% block content %}
-<div id="trans" class="w3-row w3-padding w3-container w3-black shadow">
+<div class="w3-row w3-padding w3-container external shadow">
+  <!-- Image -->
   <div class="w3-third w3-display-container w3-container" style="height:850px;">
       <div class="w3-center">
-        <img class="w3-middle w3-center" src="{{ thumbnail }}" alt="{{ bookTitle }}" style="width:80%; padding-top: 10px;">
+        <img class="w3-middle w3-center internal" src="{{ thumbnail }}" alt="{{ bookTitle }}" style="width:80%;">
       </div>
   </div>
+
+  <!-- Contents -->
   <div class="w3-twothird w3-display-container w3-container" style="padding-top: 10px; height: 850px">
     <span>
-      <h1><b>{{ bookTitle }}</b></h1>
+      <h1 class="w3-text-white"><b>{{ bookTitle }}</b></h1>
     </span>
     <div class='w3-display-container'>
-        <p class="w3-large w3-middle w3-text-green">{{ percent }}% Charm</p>
+      <p class="w3-large w3-middle w3-text-green">{{ percent }}% Charm</p>
       <div class="form-inline">
-
         {% if not rated %}
           <form action="{{ url_for('user_book',username=current_user.f_name, title=url_title, bookid=bookid, method='liked') }}" method="post" novalidate>
               <button class="btn w3-large w3-hover-white" alt='I liked this book'><i class="fas fa-heart w3-text-white"></i></button>
@@ -39,26 +41,30 @@
         {% endif %}
 
       </div>
-    </div>
-    <h3><b>Author:</b> {{ author[0] }}</h3>
-    <p><b class="w3-large">Description:</b> {{ bookDescription }}</p>
-    <button class="btn google_Link w3-large w3-text-white w3-hover-white" href="{{ googlelink }}">
-      <i class="fab fa-google" style="padding-right: 10px"></i>Preview
-    </button>
+    <!-- </div> -->
 
-    {% if not added %}
-    <form action="{{ url_for('user_book', username=current_user.f_name, title=url_title, bookid=bookid, method='add') }}" method="post" novalidate>
-      <button class="btn w3-large w3-text-white w3-hover-white" alt='Add to your "To Be Read Bookshelf"'>
-        <i class="fas fa-plus-circle" style="padding-right: 10px"></i>Add to 'TBR'
-      </button>
-    </form>
-    {% else %}
-      <form action="{{ url_for('user_book', username=current_user.f_name, title=url_title, bookid=bookid, method='remove') }}" method="post" novalidate>
-        <button class="btn w3-large w3-text-white w3-hover-white" alt='Remove from your "To Be Read Bookshelf"'>
-          <i class="fas fa-times-circle" style="padding-right: 10px"></i>Remove from 'TBR'
+      <h4 class="w3-text-white"><b>Author:</b> {{ author[0] }}</h4>
+      <p class="w3-text-white"><b class="w3-large">Description:</b> <br>
+      {{ bookDescription }}
+      </p> 
+        <button class="btn google_Link w3-large w3-text-white w3-hover-white" href="{{ googlelink }}">
+          <i class="fab fa-google" style="padding-right: 10px"></i>Preview
         </button>
-      </form>
-    {% endif %}
+
+      {% if not added %}
+        <form action="{{ url_for('user_book', username=current_user.f_name, title=url_title, bookid=bookid, method='add') }}" method="post" novalidate>
+          <button class="btn w3-large w3-text-white w3-hover-white" alt='Add to your "To Be Read Bookshelf"'>
+            <i class="fas fa-plus-circle" style="padding-right: 10px"></i>Add to 'TBR'
+          </button>
+        </form>
+      {% else %}
+        <form action="{{ url_for('user_book', username=current_user.f_name, title=url_title, bookid=bookid, method='remove') }}" method="post" novalidate>
+          <button class="btn w3-large w3-text-white w3-hover-white" alt='Remove from your "To Be Read Bookshelf"'>
+            <i class="fas fa-times-circle" style="padding-right: 10px"></i>Remove from 'TBR'
+          </button>
+        </form>
+      {% endif %}
+    </div>
   </div>
 </div>
 
