@@ -1,6 +1,6 @@
 from flask import render_template, session, abort, redirect, url_for, flash, request
 from app import app, db
-from app.forms import SearchForm, BookInputs, RateBookUp, RateBookDown, AddBook, RemoveBook
+from app.forms import SearchForm, BookInputs, ChangeUsername
 from flask_dance.consumer import oauth_authorized
 from flask_dance.contrib.google import google
 from flask_dance.contrib.facebook import facebook
@@ -67,13 +67,13 @@ def privacy():
 @app.route('/login')
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('profile',username=current_user.f_name))
+        return redirect(url_for('profile',username=current_user.username))
     return render_template('authn/choose-login.html')
 
 @app.route('/google-login', methods=['GET', 'POST'])
 def google_login():
     if current_user.is_authenticated and google.authorized:
-        return redirect(url_for('profile',username=current_user.f_name))
+        return redirect(url_for('profile',username=current_user.username))
     if (not google.authorized) and (not current_user.is_authenticated):
         return redirect(url_for('google.login'))
     try:
@@ -84,16 +84,16 @@ def google_login():
             f_name = account_info_json["given_name"]
             user = User.query.filter_by(email=email).first()
             if user is None:
-                user = User(email=email, f_name=f_name, algo=None)
+                user = User(email=email, f_name=f_name, algo=None, username=f_name)
                 db.session.add(user)
                 db.session.commit()
             login_user(user)
             current_user.login_method = "google"
             flash("Signed in with Google")
-            return redirect(url_for('profile',username=current_user.f_name))
+            return redirect(url_for('profile',username=current_user.username))
     except (InvalidGrantError, TokenExpiredError) as e:
         return redirect(url_for("google.login"))
-    return redirect(url_for('profile',username=current_user.f_name))
+    return redirect(url_for('profile',username=current_user.username))
 
 @app.route('/facebook-login', methods=['GET', 'POST'])
 def facebook_login():
@@ -173,7 +173,7 @@ def profile(username):
 
     read_books = Read_Books.query.filter(Read_Books.user==user.id).all()
 
-    return render_template('user/profile.html', form=form,username=current_user.f_name, tbr_books=tbr_books, read_books=read_books)
+    return render_template('user/profile.html', form=form,username=current_user.username, tbr_books=tbr_books, read_books=read_books)
 
 def choose_label(label):
     if int(label) == 1:
@@ -292,7 +292,7 @@ def user_book(username, title, bookid=None, method=None):
     elif book.user_rating == 0:
         rated = 2
 
-    return render_template('user/book.html', form=form,username=current_user.f_name, bookid=bookid, SEARCH_KEY=SEARCH_KEY, bookTitle=title, author=author, thumbnail=thumbnail, googlelink=googlelink, bookDescription=description, label=label, percent=percent, url_title=url_title, added=added, rated=rated)
+    return render_template('user/book.html', form=form,username=current_user.username, bookid=bookid, SEARCH_KEY=SEARCH_KEY, bookTitle=title, author=author, thumbnail=thumbnail, googlelink=googlelink, bookDescription=description, label=label, percent=percent, url_title=url_title, added=added, rated=rated)
 
 
 @app.route('/<string:username>/my-shelf', methods=['GET', 'POST'])
@@ -300,7 +300,7 @@ def user_book(username, title, bookid=None, method=None):
 def my_shelf(username):
     form = SearchForm()
     search_form(form)
-    return render_template('user/my-shelf.html', form=form,username=current_user.f_name)
+    return render_template('user/my-shelf.html', form=form,username=current_user.username)
 
 @app.route('/<string:username>/read_shelf', methods=['GET', 'POST'])
 @login_required  
@@ -346,7 +346,7 @@ def search(username):
     if form.validate_on_submit():
         flash('Search requested for {}'.format(form.search_item.data))
         return redirect('/user/search')
-    return render_template('user/search.html', form=form,username=current_user.f_name, SEARCH_KEY=SEARCH_KEY, resp=new_resp)
+    return render_template('user/search.html', form=form,username=current_user.username, SEARCH_KEY=SEARCH_KEY, resp=new_resp)
 
 @app.route('/user/<string:username>/settings', methods=['GET', 'POST'])
 @app.route('/user/<string:username>/settings/<string:action>', methods=['GET', 'POST'])
@@ -355,6 +355,7 @@ def search(username):
 def user_settings(username, action=None, classifier=None):
     form = SearchForm()
     search_form(form)
+    change_username = ChangeUsername()
 
     enough = False
     has_classifier = False
@@ -430,12 +431,13 @@ def user_settings(username, action=None, classifier=None):
             db.session.commit()
             trained = True
     if (action == 'change_username'):
-        pass
+        user.username = change_username.new_username.data
+        db.session.commit()
     if (action == 'default_classifier'):
         filename = default[classifier]
         # This should change which default classifier is used in user_books and show which was chosen here
 
-    return render_template('user/settings.html', form=form,username=current_user.f_name, enough=enough, has_classifier=has_classifier, trained=trained, book_balance=book_balance, balance=balance, num_books=num_books)
+    return render_template('user/settings.html', form=form, username=current_user.username, enough=enough, has_classifier=has_classifier, trained=trained, book_balance=book_balance, balance=balance, num_books=num_books, change_username=change_username)
 
 
 #####################
