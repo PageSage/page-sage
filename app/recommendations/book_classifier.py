@@ -298,6 +298,7 @@ class BookClassifier(object):
                     new_book.append(0)
             else:
                 new_book.append(book[data])
+            new_book.append(0)
         for category in self.categories:
             if category in book['categories']:
                 new_book[self.categories[category]] = book['categories'].count(category)
@@ -403,5 +404,4 @@ class BookClassifier(object):
         X_sample = self.__preprocess_book(book)
         
         return (self.__model.predict([X_sample]), (self.__model.predict_proba([X_sample])))
-
 
