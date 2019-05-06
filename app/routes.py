@@ -333,9 +333,15 @@ def search(username):
         new_resp = []
         for book in resp['items']:
             new_book = []
-            new_book.append(book['volumeInfo']['title'])
+            try:
+                new_book.append(book['volumeInfo']['title'])
+            except (KeyError):
+                new_book.append('Title Not Found')
             new_book.append(book['id'])
-            urltitle = (book['volumeInfo']['title']).replace(' ','_')
+            try:
+                urltitle = (book['volumeInfo']['title']).replace(' ','_')
+            except (KeyError):
+                urltitle = 'title_not_found'
             try:
                 image = book['volumeInfo']['imageLinks']['thumbnail']
             except (KeyError):
