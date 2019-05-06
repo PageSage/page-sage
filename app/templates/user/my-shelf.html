@@ -5,35 +5,62 @@
 
     
 
-    <div class="w3-container w3-row-padding external w3-center shadow">
-        <div class="w3-xlarge">
-            <h3 class="w3-text-white">TBR</h3>
-            {% if not tbr_books %}
-                <h4 class="w3-text-white">No Books on Shelf</h4>
-            {% else %}
-                <div class="scrollmenu">
-                {% for book in tbr_books %}
+    {% if tbr_books and read_books %}
+        <div class="w3-container w3-row-padding external w3-center shadow">
+            <div class="w3-xlarge">
+                <a class="w3-text-white" href="{{ url_for('tbr_shelf', username=username) }}">TBR</a>
+                {% if not tbr_books %}
+                    <h4 class="w3-text-white">No Books on Shelf</h4>
+                {% else %}
+                    <div class="scrollmenu">
+                    {% for book in tbr_books %}
                         <a href="{{ url_for('user_book', username=current_user.f_name, title=book.title, bookid=book.volume_id) }}">
                             <img class="thumbnail internal" src='{{ book.img_url }}'>
                         </a>
-                {% endfor %}
-                </div>
-            {% endif %}
-    </div>
+                    {% endfor %}
+                   </div>
+                {% endif %}
+            </div>
+        </div>
 
-    <div id="green-bg" class="green-trans w3-row-padding w3-padding-64 w3-container shadow", style="width: 100% !important">
-            <h3 class="w3-text-black">Read</h3>
+        <div class="w3-container w3-row-padding external w3-center shadow w3-xlarge" style="width: 100%; background:rgba(0, 0, 0, 0.5);">
+            <a class="w3-text-white" href="{{ url_for('read_shelf', username=username) }}">Read</h3>
             {% if not read_books %}
-                <h4 class="w3-text-black">No Books on Shelf</h4>
+                <a class="w3-text-white">No Books on Shelf</a>
             {% else %}
                 <div class="scrollmenu">
                 {% for book in read_books %}
                     <a href="{{ url_for('user_book', username=current_user.f_name, title=book.title, bookid=book.volume_id) }}">
-                      <img class="thumbnail internal" src='{{ book.img_url }}'>
+                        <img class="thumbnail internal" src='{{ book.img_url }}'>
                     </a>
+                {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    {% elif not tbr_books %}
+        <h3 class="w3-center w3-white w3-text-black">Read Shelf</h3>
+        <div class="w3-container w3-row-padding external w3-center shadow w3-xlarge">
+            {% for book in read_books %}
+                <div class="w3-third w3-hover-opacity w3-container w3-display-container" style="height:390px;">
+                    <a href="{{ url_for('user_book', username=current_user.f_name, title=book.title, bookid=book.volume_id) }}">
+                        <img class="w3-display-middle book internal" src='{{ book.img_url }}'>
+                        <p class="w3-display-topmiddle w3-text-white" style="text-align: center;"><b>{{ book.title }}</b></p>
+                    </a>
+                </div>
             {% endfor %}
-            </div>
-        {% endif %}
-    </div>
-        
+        </div>
+    {% elif not read_books %}
+        <h3 class="w3-center w3-white w3-text-black">TBR Shelf</h3>
+        <div class="w3-container w3-row-padding external w3-center shadow w3-xlarge">
+            {% for book in tbr_books %}
+                <div class="w3-third w3-hover-opacity w3-container w3-display-container" style="height:390px;">
+                    <a href="{{ url_for('user_book', username=current_user.f_name, title=book.title, bookid=book.volume_id) }}">
+                        <img class="w3-display-middle book internal" src='{{ book.img_url }}'>
+                        <p class="w3-display-topmiddle w3-text-white" style="text-align: center;"><b>{{ book.title }}</b></p>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+ 
 {% endblock %}

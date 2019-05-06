@@ -311,19 +311,33 @@ def my_shelf(username):
     if read_books == None:
         read_books = False
 
-    return render_template('user/my-shelf.html', form=form,username=current_user.f_name, tbr_books=tbr_books, read_books=read_books)
+    return render_template('user/my-shelf.html', form=form, username=current_user.username, tbr_books=tbr_books, read_books=read_books)
 
 @app.route('/<string:username>/read_shelf', methods=['GET', 'POST'])
 @login_required  
 def read_shelf(username):
     form = SearchForm()
-    return render_template('user/my-shelf.html', form=form)
+    read_books = Read_Books.query.filter(Read_Books.user==current_user.id).all()
+
+    if read_books == None:
+        read_books = []
+
+    tbr_books = False
+
+    return render_template('user/my-shelf.html', form=form, username=current_user.username, tbr_books=tbr_books, read_books=read_books)
 
 @app.route('/<string:username>/tbr_shelf', methods=['GET', 'POST'])
 @login_required
 def tbr_shelf(username):
     form = SearchForm()
-    return render_template('user/my-shelf.html', form=form)
+    tbr_books = TBR_Books.query.filter(TBR_Books.user==current_user.id).all()
+
+    if tbr_books == None:
+        read_books = []
+
+    read_books = False
+
+    return render_template('user/my-shelf.html', form=form, username=current_user.username, tbr_books=tbr_books, read_books=read_books)
 
 
 @app.route('/user/<string:username>/search', methods=['GET', 'POST'])
