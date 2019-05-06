@@ -270,6 +270,7 @@ class BookClassifier(object):
                         new_book.append(0)
                 else:
                     new_book.append(book[data])
+            new_book.append(0)
             new_books.append(new_book)
         for index, book in enumerate(new_books):
             for category in self.categories:
@@ -296,6 +297,7 @@ class BookClassifier(object):
                     new_book.append(0)
             else:
                 new_book.append(book[data])
+        new_book.append(0)
         for category in self.categories:
             if category in book['categories']:
                 new_book[self.categories[category]] = book['categories'].count(category)

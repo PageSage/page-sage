@@ -4,26 +4,26 @@
     <!-- Books/Main -->
     <header class="w3-container external w3-center shadow">
         <div class="w3-xlarge">
-            <h3 class="w3-text-white">TBR</h3>
+            <a class="w3-text-white" href="{{ url_for('tbr_shelf', username=current_user.username) }}">TBR</a>
             {% if not tbr_books %}
-                <h4>No Books on Shelf</h4>
+                <h4 class="w3-text-white">No Books on Shelf</h4>
             {% else %}
                 <div class="scrollmenu">
                 {% for book in tbr_books %}
-                      <a href="{{ url_for('user_book', username=current_user.f_name, title=book.title, bookid=book.volume_id) }}">
+                      <a href="{{ url_for('user_book', username=current_user.username, title=book.title, bookid=book.volume_id) }}">
                         <img class="thumbnail internal" src='{{ book.img_url }}'>
                       </a>
                 {% endfor %}
               </div>
             {% endif %}
             <br>
-            <h3 class="w3-text-white">Read</h3>
+            <a class="w3-text-white" href="{{ url_for('read_shelf', username=current_user.username) }}">Read</a>
             {% if not read_books %}
-                <h4>No Books on Shelf</h4>
+                <h4 class="w3-text-white">No Books on Shelf</h4>
             {% else %}
               <div class="scrollmenu">
                 {% for book in read_books %}
-                  <a href="{{ url_for('user_book', username=current_user.f_name, title=book.title, bookid=book.volume_id) }}">
+                  <a href="{{ url_for('user_book', username=current_user.username, title=book.title, bookid=book.volume_id) }}">
                       <img class="thumbnail w3-padding" src='{{ book.img_url }}'>
                   </a>
                 {% endfor %}
