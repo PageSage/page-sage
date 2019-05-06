@@ -5,26 +5,21 @@ from sqlalchemy.orm.exc  import NoResultFound
 from flask_dance.consumer.backend.sqla import OAuthConsumerMixin
 from flask_dance.consumer import oauth_authorized, oauth_error
 from flask_login import UserMixin
+from datetime import date
 import datetime
-
-# club_members = db.Table('club_members', \
-#         db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True), \
-#         db.Column('club_id', db.Integer, db.ForeignKey('bookclub.id'), primary_key=True))
 
 class User(db.Model, UserMixin):
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
-    # Formerly username
     email = db.Column(db.String(256), unique=True) 
     f_name = db.Column(db.String(30))
     username = db.Column(db.String(256), nullable=True)
     profile_photo = db.Column(db.LargeBinary, nullable=True)
     algo = db.Column(db.LargeBinary, nullable=True)
-    # Add a datetime column to check if retraining is possible
+    last_train = db.Column(db.Date, nullable=True)
 
     read_books = db.relationship('Read_Books', backref=db.backref('read_user', lazy=True))
     tbr_books = db.relationship('TBR_Books', backref=db.backref('tbr_user', lazy=True))
-    # clubs = db.relationship('Bookclub', secondary=club_members, lazy='subquery', backref=db.backref('members', lazy=True))
     bookclubs = db.relationship('Bookclub', secondary='members')
 
     def __repr__(self):
