@@ -300,7 +300,18 @@ def user_book(username, title, bookid=None, method=None):
 def my_shelf(username):
     form = SearchForm()
     search_form(form)
-    return render_template('user/my-shelf.html', form=form,username=current_user.f_name)
+    user = User.query.filter_by(email=current_user.email).first()
+    
+    tbr_books = TBR_Books.query.filter(TBR_Books.user==user.id).all()
+
+    read_books = Read_Books.query.filter(Read_Books.user==user.id).all()
+
+    if tbr_books == None:
+        tbr_books = False
+    if read_books == None:
+        read_books = False
+
+    return render_template('user/my-shelf.html', form=form,username=current_user.f_name, tbr_books=tbr_books, read_books=read_books)
 
 @app.route('/<string:username>/read_shelf', methods=['GET', 'POST'])
 @login_required  

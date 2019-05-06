@@ -6,7 +6,7 @@
         <div class="w3-xlarge">
             <h3 class="w3-text-white">TBR</h3>
             {% if not tbr_books %}
-                <h4>No Books on Shelf</h4>
+                <h4 class="w3-text-white">No Books on Shelf</h4>
             {% else %}
                 <div class="scrollmenu">
                 {% for book in tbr_books %}
@@ -19,7 +19,7 @@
             <br>
             <h3 class="w3-text-white">Read</h3>
             {% if not read_books %}
-                <h4>No Books on Shelf</h4>
+                <h4 class="w3-text-white">No Books on Shelf</h4>
             {% else %}
               <div class="scrollmenu">
                 {% for book in read_books %}
