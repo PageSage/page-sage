@@ -20,6 +20,7 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(256), nullable=True)
     profile_photo = db.Column(db.LargeBinary, nullable=True)
     algo = db.Column(db.LargeBinary, nullable=True)
+    # Add a datetime column to check if retraining is possible
 
     read_books = db.relationship('Read_Books', backref=db.backref('read_user', lazy=True))
     tbr_books = db.relationship('TBR_Books', backref=db.backref('tbr_user', lazy=True))

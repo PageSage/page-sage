@@ -101,14 +101,14 @@
                 <a href="{{ url_for('logout') }}" class="w3-bar-item w3-right w3-button bg-transparent w3-padding-large w3-hover-white w3-large text-light" title="Logout">
                     <i class="fas fa-sign-out-alt"></i>
                 </a>
-                <a href="{{ url_for('profile',username=current_user.f_name) }}" class="w3-bar-item w3-right w3-button bg-transparent w3-padding-large w3-hover-white w3-large text-light" title="User Page">
+                <a href="{{ url_for('profile',username=current_user.username) }}" class="w3-bar-item w3-right w3-button bg-transparent w3-padding-large w3-hover-white w3-large text-light" title="User Page">
                     <i class="fas fa-book-reader"></i>
                 </a>
-                <a href="{{ url_for('search',username=current_user.f_name) }}" class="w3-hide-medium w3-hide-large w3-bar-item w3-right w3-button bg-transparent w3-padding-large w3-hover-white w3-large text-light" title="search">
+                <a href="{{ url_for('search',username=current_user.username) }}" class="w3-hide-medium w3-hide-large w3-bar-item w3-right w3-button bg-transparent w3-padding-large w3-hover-white w3-large text-light" title="search">
                     <i class="fas fa-search"></i>
                 </a>
                 <div id="search-form-header" class="w3-hide-small w3-bar-item py-2 w3-right">
-                    <form action="{{ url_for('search',username=current_user.f_name) }}" method="post" novalidate>
+                    <form action="{{ url_for('search',username=current_user.username) }}" method="post" novalidate>
                         <div class="form-inline">
                             {{ form.search_item(size=32, id="search", class_="form-control mr-sm-2 mt-2 mt-md-0 pl-3 search-bar", style="width: 200px;", onclick="hideStyle()") }}
                             {{ form.search(class_="btn btn-outline-dark text-light my-2 my-sm-0 search-button search-icon") }}
