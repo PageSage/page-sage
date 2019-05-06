@@ -9,8 +9,16 @@
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
         <link rel='stylesheet' href="{{ url_for('static', filename='./css/general.css') }}">
         <link rel='stylesheet' href="{{ url_for('static', filename='./css/landing.css') }}">
+        <style>
+            .bgimg {
+                background-position: center;
+                background-size: cover;
+                background-image: url("{{ url_for('static', filename='./img/banner.png') }}");
+                min-height: 75%;
+            }
+        </style>
     </head>
-    <body class="main-scheme">
+    <body class="main-scheme bgimg">
         <!-- Top Navbar -->
         <div class="top">
             <div class="w3-bar w3-dark-grey w3-card w3-large">

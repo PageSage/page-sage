@@ -6,8 +6,8 @@
         <h1 class="w3-margin w3-jumbo">User Profile</h1>
         <div class="w3-xlarge">
             <h3>TBR Books</h3>
-            {% if tbr_books == None %}
-                <p>No Books on Shelf</p>
+            {% if not tbr_books %}
+                <h4>No Books on Shelf</h4>
             {% else %}
                 {% for book in tbr_books %}
                     <div>
@@ -17,8 +17,8 @@
             {% endif %}
             <br>
             <h3>Read Books</h3>
-            {% if read_books == None %}
-                <p>No Books on Shelf</p>
+            {% if not read_books %}
+                <h4>No Books on Shelf</h4>
             {% else %}
                 {% for book in read_books %}
                     <div>
