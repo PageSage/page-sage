@@ -23,7 +23,7 @@
 
     {% if resp != None %}
 
-    <div class="w3-container">
+    <div class="w3-container external">
         <form action="{{url_for('user_book',title='title',username=current_user.f_name)}}" method="post">
         <div class="form_inline">
             <!-- <div class="w3-display-container shadow w3-light-grey w3-padding-64 shadow"> -->
@@ -31,9 +31,9 @@
             <p id="results" style="color:black;"></p>
             {% for book in resp %}
             <a href="{{url_for('user_book', title=book[2], bookid=book[1],username=current_user.f_name)}}">
-                <div class="w3-third w3-hover-opacity w3-container w3-display-container" style="height:375px;">
-                    <img class="thumbnail w3-display-middle w3-padding-large" src='{{ book[3] }}'>
-                    <p class="w3-display-topmiddle w3-large" style="text-align: center;"><b>{{ book[0] }}</b></p>
+                <div class="w3-third w3-hover-opacity w3-container w3-display-container" style="height:390px;">
+                    <img class="w3-display-middle book internal" src='{{ book[3] }}'>
+                    <p class="w3-display-topmiddle w3-text-white" style="text-align: center;"><b>{{ book[0] }}</b></p>
                 </div>
             </a>
             <!-- <br> -->

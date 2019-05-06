@@ -55,5 +55,47 @@
   }  
 
   .thumbnail {
-    height: 60%;
+    height: 500px;
+    width: 334px;
+  }
+
+  .book {
+    height: 275px;
+    width: 188px;
+  }
+  
+  #trans {
+    opacity: 0.85;
+  }
+
+  .green-trans {
+    background-color: #8F9882;
+    opacity: 0.85;
+  }
+
+  div.scrollmenu {
+    overflow: auto;
+    white-space: nowrap;
+  }
+
+  div.scrollmenu a {
+    display: inline-block;
+    color: white;
+    text-align: center;
+    padding: 14px;
+    text-decoration: none;
+  }
+  
+  div.scrollmenu a:hover {
+    background-color: darkgray;
+  }
+
+  .external {
+    background:rgba(0, 0, 0, 0.75);
+  }
+
+  .internal {
+    border: none;
+    margin: 10px;
+    background:rgba(0,0,0,1.0);
   }

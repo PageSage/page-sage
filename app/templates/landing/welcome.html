@@ -4,16 +4,11 @@
     <!--- LOGIN/SIGNUP AREA LARGE/MEDIUM SCREEN-->
     <div class="bgimg w3-hide-small w3-light-grey w3-row-padding w3-padding-32 w3-display-container w3-container shadow">
         <div class="w3-content">
-            <!-- Cat -->
-            <div class="w3-third">
-                <img class="w3-image mirror" alt="derp cat" src="{{ url_for('static', filename='./img/cat.png') }}">
-            </div>
 
-            <!-- Login Form -->
-            <div class="w3-hide-large w3-third w3-padding w3-display-middle">
-                <div class="w3-white w3-card" style="width: 100%;">
+            <div class="w3-padding w3-display-middle">
+                <div class="w3-card w3-black" style="width: 100%; opacity: 0.85;">
                     <div class="w3-bar-item w3-bar-block w3-card w3-center">
-                        <a class="w3-bar-item w3-white w3-button bg-transparent w3-padding-large w3-hover-white w3-large">
+                        <a class="w3-bar-item w3-black w3-button bg-transparent w3-padding-large w3-hover-white w3-large">
                             Login/Signup
                         </a>
 
@@ -26,55 +21,11 @@
                     </div>
                 </div>
             </div>
-
-            <div class="w3-hide-medium w3-padding w3-display-right">
-                <div class="w3-white w3-card" style="margin-right: 400px;">
-                    <div class="w3-bar-item w3-bar-block w3-card w3-center">
-                        <a class="w3-bar-item w3-white w3-button bg-transparent w3-padding-large w3-hover-white w3-large">
-                            Login/Signup
-                        </a>
-                        <a href="{{ url_for('google_login') }}" class="w3-bar-item w3-red w3-button bg-transparent w3-padding-large w3-hover-white w3-large" title="Log in with Google">
-                            <i class="fab fa-google w3-center" style="font-size:24px"></i>
-                        </a>
-                        <a href="{{ url_for('facebook_login') }}" class="w3-bar-item w3-blue w3-button bg-transparent w3-padding-large w3-hover-white w3-large" title="Log in with Facebook">
-                            <i class="fab fa-facebook w3-center" style="font-size:24px"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-
-            <!-- Cat -->
-            <div class="w3-hide-large w3-third w3-right">
-                <img class="w3-image" alt="derp cat" src="{{ url_for('static', filename='./img/cat.png') }}">
-            </div>
-        </div>
-    </div>
-
-    <!-- LOGIN/SIGNUP AREA SMALL SCREEN -->
-    <div class="w3-hide-large w3-hide-medium w3-row-padding w3-display-container w3-container shadow" style="padding-top: 200px; padding-bottom: 200px;">
-        <div class="w3-content">
-            <!-- Login Form -->
-            <div class="w3-padding w3-display-middle">
-                <div class="w3-white w3-card" style="width: 100%;">
-                    <div class="w3-bar-item w3-bar-block w3-card w3-center">
-                        <a class="w3-bar-item w3-white w3-button bg-transparent w3-padding-large w3-hover-white w3-large">
-                            Login/Signup
-                        </a>
-                        <a href="{{ url_for('google_login') }}" class="w3-bar-item w3-red w3-button bg-transparent w3-padding-large w3-hover-white w3-large" title="Log in with Google">
-                            <i class="fab fa-google w3-center" style="font-size:24px"></i>
-                        </a>
-                        <a href="{{ url_for('facebook_login') }}" class="w3-bar-item w3-blue w3-button bg-transparent w3-padding-large w3-hover-white w3-large" title="Log in with Facebook">
-                            <i class="fab fa-facebook w3-center" style="font-size:24px"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 
     <!-- Second Grid -->
-    <div id="header-bg" class="w3-row-padding w3-container w3-dark-grey" style="padding-top: 150px; padding-bottom: 200px;">
+    <div id="trans" class="w3-row-padding w3-container w3-black" style="padding-top: 150px; padding-bottom: 200px;">
             <div class="w3-content">
                 <div class="w3-third w3-center">
                     <i class="fas fa-info-circle w3-padding-64 text-light w3-margin-right" style="font-size: 100px"></i>
