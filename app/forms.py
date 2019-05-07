@@ -25,3 +25,8 @@ class SearchBookclubs(FlaskForm):
 class JoinBookclub(FlaskForm):
     bookclub = StringField('Bookclub Key Code', validators=[InputRequired()])
     join = SubmitField('Join Bookclub')
+
+class CreateBookclub(FlaskForm):
+    bookclub_name = StringField('New Bookclub Name', validators=[InputRequired()])
+    bookclub_key = StringField('New Bookclub Key', validators=[InputRequired()])
+    create = SubmitField('Create Bookclub')

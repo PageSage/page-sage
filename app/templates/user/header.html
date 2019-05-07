@@ -25,15 +25,15 @@
     <div id="sidebar-bg" class="w3-hide-small w3-sidebar w3-dark-grey w3-bar-block w3-card w3-animate-left sidebar" style="display:none; opacity: .95;">
 
         <!-- Medium and Large Screens -->
-        <a href="{{ url_for('my_shelf',username=current_user.username) }}" class="w3-hide-small w3-bar-item w3-button bg-transparent w3-padding-large w3-hover-white w3-large text-light" title="My Bookshelf">
+        <a href="{{ url_for('my_shelf', username=current_user.username) }}" class="w3-hide-small w3-bar-item w3-button bg-transparent w3-padding-large w3-hover-white w3-large text-light" title="My Bookshelf">
             <i title="My Shelf" class="fas fa-align-left fa-rotate-270"></i>
             My Shelves
         </a>
-        <a href="{{ url_for('bookclub') }}" class="w3-hide-small w3-bar-item w3-button bg-transparent w3-padding-large w3-hover-white w3-large text-light" title="A Bookclub">
+        <a href="?" class="w3-hide-small w3-bar-item w3-button bg-transparent w3-padding-large w3-hover-white w3-large text-light" title="A Bookclub">
             <i title="Bookclub" class="fas fa-users"></i>
             Bookclub
         </a>
-        <a href="{{ url_for('search_bookclubs') }}" class="w3-hide-small w3-bar-item w3-button bg-transparent w3-padding-large w3-hover-white w3-large text-light" title="Add Bookclub">
+        <a href="{{ url_for('search_bookclubs', username=current_user.username) }}" class="w3-hide-small w3-bar-item w3-button bg-transparent w3-padding-large w3-hover-white w3-large text-light" title="Add Bookclub">
             <i title="Join Bookclub" class="fas fa-plus"></i>
             Join Clubs
         </a>
@@ -48,15 +48,15 @@
         <a class="w3-hide-medium w3-hide-large w3-bar-item w3-button bg-transparent w3-padding w3-hover-white w3-xlarge text-light w3-right" onclick="toggleSmallSidebar()">
             <i title="Close Sidebar" class="fas fa-times w3-right"></i>
         </a>
-        <a href="{{ url_for('my_shelf',username=current_user.username) }}" class="w3-hide-medium w3-hide-large w3-bar-item w3-button bg-transparent w3-padding w3-hover-white w3-xlarge text-light">
+        <a href="{{ url_for('my_shelf', username=current_user.username) }}" class="w3-hide-medium w3-hide-large w3-bar-item w3-button bg-transparent w3-padding w3-hover-white w3-xlarge text-light">
             <i title="My Shelf" class="fas fa-align-left fa-rotate-270"></i>
             My Shelves
         </a>
-        <a href="{{ url_for('bookclub') }}" class="w3-hide-medium w3-hide-large w3-bar-item w3-button bg-transparent w3-padding w3-hover-white w3-light w3-xlarge text-light">
+        <a href="?" class="w3-hide-medium w3-hide-large w3-bar-item w3-button bg-transparent w3-padding w3-hover-white w3-light w3-xlarge text-light">
             <i title="Bookclub" class="fas fa-users"></i>
             Bookclub
         </a>
-        <a href="{{ url_for('search_bookclubs') }}" class="w3-hide-medium w3-hide-large w3-bar-item w3-button bg-transparent w3-paddingw3-hover-white w3-xlarge text-light">
+        <a href="{{ url_for('search_bookclubs', username=current_user.username) }}" class="w3-hide-medium w3-hide-large w3-bar-item w3-button bg-transparent w3-paddingw3-hover-white w3-xlarge text-light">
             <i title="Join Bookclub" class="fas fa-plus"></i>
             Join Clubs
         </a>

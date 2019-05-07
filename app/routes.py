@@ -1,6 +1,6 @@
 from flask import render_template, session, abort, redirect, url_for, flash, request
 from app import app, db
-from app.forms import SearchForm, BookInputs, ChangeUsername, SearchBookclubs, JoinBookclub
+from app.forms import SearchForm, BookInputs, ChangeUsername, SearchBookclubs, JoinBookclub, CreateBookclub
 from flask_dance.consumer import oauth_authorized
 from flask_dance.contrib.google import google
 from flask_dance.contrib.facebook import facebook
@@ -454,8 +454,9 @@ def user_settings(username, action=None, classifier=None):
 ## Bookclub Routes ##
 #####################
 
-@app.route('<string:username>/search_bookclubs', methods=['GET', 'POST'])
-@app.route('<string:username>/search_bookclubs/<string:action>', methods=['GET', 'POST'])
+@app.route('/<string:username>/search_bookclubs', methods=['GET', 'POST'])
+@app.route('/<string:username>/search_bookclubs/<string:action>', methods=['GET', 'POST'])
+@login_required
 def search_bookclubs(username, action=None):
     form = SearchForm()
     
@@ -463,8 +464,8 @@ def search_bookclubs(username, action=None):
 
     bookclubs = 5
 
-    if (action == 'search_bookclubs') and (bookclub_book.bookclub.data != None):
-        data = bookclub_book.bookclub.data.replace('=', '')
+    if (action == 'search_bookclubs') and (bookclub_search.bookclub.data != None):
+        data = bookclub_search.bookclub.data.replace('=', '')
         if data == '" or ""="':
              render_template('bookclub/search_bookclubs.html', form=form, username=username, bookclub_search=bookclub_search)
         data = data.replace(';', '')
@@ -476,15 +477,17 @@ def search_bookclubs(username, action=None):
     return render_template('bookclub/search_bookclubs.html', form=form, username=username, bookclub_search=bookclub_search, bookclubs=bookclubs)
 
 
-@app.route('<string:username>/join_bookclub/<string:bookclub_name>/<string:bookclubid>', methods=['GET', 'POST'])
-def join_bookclub(username, bookclub_name=None, bookclubid=None, key=None):
+@app.route('/<string:username>/join_bookclub/<string:bookclub_name>/<string:bookclubid>', methods=['GET', 'POST'])
+@login_required
+def join_bookclub(username, bookclub_name=None, bookclubid=None):
     form = SearchForm()
 
     join_form = JoinBookclub()
 
     joined = False
 
-    if (bookclub_name=None) or (bookclubid=None):
+    print("adlk;fasdf")
+    if (bookclub_name==None) or (bookclubid==None):
         bookclub_name = bookclubid = "unknown"
         bookclub_join = False
     else:
@@ -496,26 +499,53 @@ def join_bookclub(username, bookclub_name=None, bookclubid=None, key=None):
     is_member = Members.query.filter(Members.user_id==current_user.id, Members.bookclub_id==bookclubid).first()
 
     if is_member != None:
-        return url_for('bookclub', bookclub=bookclub_name, bookclubid=bookclubid)
-    elif (is_member != None) and (bookclub_join not in (None, False)):
+        return render_template('bookclub/club.html', username=username, bookclub_name=bookclub_name, bookclubid=bookclubid, form=form)
+    elif (is_member != None) and (bookclub_join not in (None, False)) and (bookclub_join.join_key == join_form.bookclub.data):
         new_member = Member(user_id=current_user.id, bookclub_id=bookclubid)
+        db.session.add(new_member)
         db.session.commit()
-        return url_for('bookclub', bookclub=bookclub_name, bookclubid=bookclubid)
+        return render_template('bookclub/club.html', username=username, bookclub_name=bookclub_name, bookclubid=bookclubid, form=form)
 
-    return render_template('bookclub/join_bookclub.html', bookclub=bookclub_join, join_form=join_form, bookclub_name=bookclub_name, bookclubid=bookclubid, joined=joined)
+    return render_template('bookclub/join_bookclub.html', bookclub=bookclub_join, join_form=join_form, bookclub_name=bookclub_name, bookclubid=bookclubid, joined=joined, form=form)
 
+
+@app.route('/<string:username>/create_bookclub/', methods=['GET', 'POST'])
+@login_required
+def create_bookclub(username):
+    form = SearchForm()
+
+    create_form = CreateBookclub()
+
+    if (create_form.bookclub_name.data != None) and (create_form.bookclub_key.data != None):
+        new_bookclub = Bookclub(name=create_form.bookclub_name.data, join_key=create_form.bookclub_key.data, president=current_user.id, president_name=current_user.username)
+        db.session.add(new_bookclub)
+        db.session.commit()
+        print(new_bookclub.id)
+        new_member = Members(user_id=current_user.id, bookclub_id=new_bookclub.id)
+        db.session.add(new_member)
+        db.session.commit()
+        print(new_bookclub.name)
+        return render_template('bookclub/club.html', bookclub_name=new_bookclub.name, bookclubid=new_bookclub.id, form=form)
+
+    return render_template('bookclub/create_bookclub.html', create_form=create_form, form=form)
 
 ##### User must join bookclub with the appropriate key
 ##### Need to create form to request key
 
 
 ## Bookclub routes should eventually be: /bookclub/<club_name>
-@app.route('/bookclub/<string:bookclub>/<string:bookclubid>', methods=['GET', 'POST'])
+@app.route('/bookclub/<string:bookclub_name>/<string:bookclubid>', methods=['GET', 'POST'])
 @login_required
-def bookclub(bookclub, bookclubid):
+def bookclub(bookclub_name=None, bookclubid=None):
     form = SearchForm()
-    search_form(form)
-    return render_template('bookclub/club.html', form=form)
+    is_member = Members.query.filter(Members.user_id==current_user.id, Members.bookclub_id==current_user.id).first()
+
+    if is_member == None:
+        return render_template('errors/401_bookclub.html')
+
+    bookclub = Bookclub.query.filter(Bookclub.id==bookclubid).first()
+
+    return render_template('bookclub/club.html', form=form, bookclub=bookclub)
 
 @app.route('/bookclub/forums', methods=['GET', 'POST'])
 @login_required
