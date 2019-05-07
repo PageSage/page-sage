@@ -27,15 +27,15 @@
         <!-- Medium and Large Screens -->
         <a href="{{ url_for('my_shelf',username=current_user.username) }}" class="w3-hide-small w3-bar-item w3-button bg-transparent w3-padding-large w3-hover-white w3-large text-light" title="My Bookshelf">
             <i title="My Shelf" class="fas fa-align-left fa-rotate-270"></i>
-            Shelf
+            My Shelves
         </a>
         <a href="{{ url_for('bookclub') }}" class="w3-hide-small w3-bar-item w3-button bg-transparent w3-padding-large w3-hover-white w3-large text-light" title="A Bookclub">
             <i title="Bookclub" class="fas fa-users"></i>
             Bookclub
         </a>
-        <a href="?" class="w3-hide-small w3-bar-item w3-button bg-transparent w3-padding-large w3-hover-white w3-large text-light" title="Add Bookclub">
-            <i title="Add Bookclub" class="fas fa-plus"></i>
-            Add Club
+        <a href="{{ url_for('search_bookclubs') }}" class="w3-hide-small w3-bar-item w3-button bg-transparent w3-padding-large w3-hover-white w3-large text-light" title="Add Bookclub">
+            <i title="Join Bookclub" class="fas fa-plus"></i>
+            Join Clubs
         </a>
         <a href="?" class="w3-hide-small w3-bar-item w3-button bg-transparent w3-padding-large w3-hover-white w3-large text-light" title="DM's">
             <i title="DM's" class="fas fa-comments"></i>
@@ -50,15 +50,15 @@
         </a>
         <a href="{{ url_for('my_shelf',username=current_user.username) }}" class="w3-hide-medium w3-hide-large w3-bar-item w3-button bg-transparent w3-padding w3-hover-white w3-xlarge text-light">
             <i title="My Shelf" class="fas fa-align-left fa-rotate-270"></i>
-            Shelf
+            My Shelves
         </a>
         <a href="{{ url_for('bookclub') }}" class="w3-hide-medium w3-hide-large w3-bar-item w3-button bg-transparent w3-padding w3-hover-white w3-light w3-xlarge text-light">
             <i title="Bookclub" class="fas fa-users"></i>
             Bookclub
         </a>
-        <a href="?" class="w3-hide-medium w3-hide-large w3-bar-item w3-button bg-transparent w3-paddingw3-hover-white w3-xlarge text-light">
-            <i title="Add Bookclub" class="fas fa-plus"></i>
-            Add Club
+        <a href="{{ url_for('search_bookclubs') }}" class="w3-hide-medium w3-hide-large w3-bar-item w3-button bg-transparent w3-paddingw3-hover-white w3-xlarge text-light">
+            <i title="Join Bookclub" class="fas fa-plus"></i>
+            Join Clubs
         </a>
         <a href="?" class="w3-hide-medium w3-hide-large w3-bar-item w3-button bg-transparent w3-padding w3-hover-white w3-xlarge text-light">
             <i title="DM's" class="fas fa-comments"></i>

@@ -56,7 +56,10 @@ class Bookclub(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(256))
     president = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+    president_name = db.Column(db.String(256))
     host = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+
+    join_key = db.Column(db.String(256))
 
     books = db.relationship('Club_Shelf', backref=db.backref('club_book', lazy=True))
     users = db.relationship('User', secondary='members')
