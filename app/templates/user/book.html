@@ -47,9 +47,11 @@
       <p class="w3-text-white"><b class="w3-large">Description:</b> <br>
       {{ bookDescription }}
       </p> 
-        <button class="btn google_Link w3-large w3-text-white w3-hover-white" href="{{ googlelink }}">
-          <i class="fab fa-google" style="padding-right: 10px"></i>Preview
-        </button>
+        <a href="{{ googlelink }}">
+          <button class="btn google_Link w3-large w3-text-white w3-hover-white">
+            <i class="fab fa-google" style="padding-right: 10px"></i>Preview
+          </button>
+        </a>
 
       {% if not added %}
         <form action="{{ url_for('user_book', username=current_user.username, title=url_title, bookid=bookid, method='add') }}" method="post" novalidate>
