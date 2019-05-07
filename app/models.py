@@ -20,8 +20,10 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(256), nullable=True)
     profile_photo = db.Column(db.LargeBinary, nullable=True)
     algo = db.Column(db.LargeBinary, nullable=True)
+    # Add a datetime column to check if retraining is possible
 
-    books = db.relationship('User_Shelf', backref=db.backref('reader', lazy=True))
+    read_books = db.relationship('Read_Books', backref=db.backref('read_user', lazy=True))
+    tbr_books = db.relationship('TBR_Books', backref=db.backref('tbr_user', lazy=True))
     # clubs = db.relationship('Bookclub', secondary=club_members, lazy='subquery', backref=db.backref('members', lazy=True))
     bookclubs = db.relationship('Bookclub', secondary='members')
 
@@ -29,15 +31,29 @@ class User(db.Model, UserMixin):
         return '<User {}>'.format(self.email)
 
 
-class User_Shelf(db.Model):
-    __tablename__ = 'user_shelf'
-    id = db.Column(db.String(256), primary_key=True)
+class Read_Books(db.Model):
+    __tablename__ = 'read_books'
+    id = db.Column(db.Integer, primary_key=True)
     volume_id = db.Column(db.String(256))
-    user_rating = db.Column(db.Integer, nullable=True)
-    user_pred = db.Column(db.Float)
+    title = db.Column(db.String(512))
+    user_rating = db.Column(db.Integer)
+    img_url = db.Column(db.String(512))
+    user = db.Column(db.Integer, db.ForeignKey('user.id'))    
+
+    notes = db.relationship('Read_Notes', backref=db.backref('book_note', lazy=True))
+
+
+class TBR_Books(db.Model):
+    __tablename__ = 'tbr_books'
+    id = db.Column(db.Integer, primary_key=True)
+    volume_id = db.Column(db.String(256))
+    title = db.Column(db.String(512))
+    user_pred = db.Column(db.String(32))
+    img_url = db.Column(db.String(512))
+    reading = db.Column(db.Boolean)
     user = db.Column(db.Integer, db.ForeignKey('user.id'))
 
-    notes = db.relationship('Notes', backref=db.backref('book_note', lazy=True))
+    notes = db.relationship('TBR_Notes', backref=db.backref('book_note', lazy=True))
 
 
 class Bookclub(db.Model):
@@ -84,12 +100,19 @@ class Forum_Posts(db.Model):
     author = db.Column(db.Integer, db.ForeignKey('user.id'))
     forum = db.Column(db.Integer, db.ForeignKey('forums.id'))
 
-class Notes(db.Model):
-    __tablename__ = 'posts'
+class Read_Notes(db.Model):
+    __tablename__ = 'read_notes'
     id = db.Column(db.Integer, primary_key=True)
     time = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     content = db.Column(db.Text)
-    book = db.Column(db.String(256), db.ForeignKey('user_shelf.id'))
+    book = db.Column(db.Integer, db.ForeignKey('read_books.id'))
+
+class TBR_Notes(db.Model):
+    __tablename__ = 'tbr_notes'
+    id = db.Column(db.Integer, primary_key=True)
+    time = db.Column(db.DateTime, default=datetime.datetime.utcnow)
+    content = db.Column(db.Text)
+    book = db.Column(db.Integer, db.ForeignKey('tbr_books.id'))
 
 class OAuth(db.Model, OAuthConsumerMixin):
     user_id = db.Column(db.Integer, db.ForeignKey(User.id))

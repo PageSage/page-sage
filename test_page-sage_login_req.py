@@ -91,6 +91,30 @@ class BasicRouteTests(unittest.TestCase):
         response = self.app.get('/user/username/book')
         self.assertEqual(response.status_code, 401)
 
+    def test_user_book_bookid(self):
+        response = self.app.get('/user/username/title/bookid')
+        self.assertEqual(response.status_code, 401)
+
+    def test_user_book_liked(self):
+        response = self.app.get('/user/username/title/bookid/liked')
+        self.assertEqual(response.status_code, 401)
+
+    def test_user_book_disliked(self):
+        response = self.app.get('/user/username/title/bookid/disliked')
+        self.assertEqual(response.status_code, 401)
+
+    def test_user_book_add(self):
+        response = self.app.get('/user/username/title/bookid/add')
+        self.assertEqual(response.status_code, 401)
+
+    def test_user_book_remove(self):
+        response = self.app.get('/user/username/title/bookid/remove')
+        self.assertEqual(response.status_code, 401)
+
+    def test_user_book_unrate(self):
+        response = self.app.get('/user/username/title/bookid/unrate')
+        self.assertEqual(response.status_code, 401)
+
     def test_my_shelf(self):
         response = self.app.get('/username/my-shelf')
         self.assertEqual(response.status_code, 401)
@@ -101,6 +125,14 @@ class BasicRouteTests(unittest.TestCase):
 
     def test_user_settings(self):
         response = self.app.get('/user/username/settings')
+        self.assertEqual(response.status_code, 401)
+
+    def test_user_settings_train(self):
+        response = self.app.get('/user/username/settings/train')
+        self.assertEqual(response.status_code, 401)
+
+    def test_user_settings_change_username(self):
+        response = self.app.get('/user/username/settings/change_username')
         self.assertEqual(response.status_code, 401)
 
 

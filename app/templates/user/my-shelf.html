@@ -1,5 +1,71 @@
 {% extends "user/header.html" %}
 
 {% block content %}
-    <h1>My Bookshelf</h1>
+    <!-- Books/Main -->
+
+    
+
+    {% if tbr_books and read_books %}
+        <div class="w3-container w3-row-padding external w3-center shadow">
+            <div class="w3-xlarge">
+                <a class="w3-text-white" href="{{ url_for('tbr_shelf', username=username) }}">TBR</a>
+                {% if not tbr_books %}
+                    <h4 class="w3-text-white">No Books on Shelf</h4>
+                {% else %}
+                    <div class="scrollmenu">
+                    {% for book in tbr_books %}
+                        <a href="{{ url_for('user_book', username=current_user.f_name, title=book.title, bookid=book.volume_id) }}">
+                            <img class="thumbnail internal" src='{{ book.img_url }}'>
+                        </a>
+                    {% endfor %}
+                   </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="w3-container w3-row-padding privacy w3-center shadow w3-xlarge">
+            <a href="{{ url_for('read_shelf', username=username) }}">Read</h3>
+            {% if not read_books %}
+                <a>No Books on Shelf</a>
+            {% else %}
+                <div class="scrollmenu">
+                {% for book in read_books %}
+                    <a href="{{ url_for('user_book', username=current_user.f_name, title=book.title, bookid=book.volume_id) }}">
+                        <img class="thumbnail internal" src='{{ book.img_url }}'>
+                    </a>
+                {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    {% elif not tbr_books %}
+        <div class="w3-row-padding privacy w3-container">
+            <h3 class="w3-center">Read Shelf</h3>
+        </div>
+        <div class="w3-container w3-row-padding external w3-center shadow">
+            {% for book in read_books %}
+                <div class="w3-third w3-hover-opacity w3-container w3-display-container" style="height:390px;">
+                    <a href="{{ url_for('user_book', username=current_user.f_name, title=book.title, bookid=book.volume_id) }}">
+                        <img class="w3-display-middle book internal" src='{{ book.img_url }}'>
+                        <p class="w3-display-topmiddle w3-text-white" style="text-align: center;"><b>{{ book.title }}</b></p>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    {% elif not read_books %}
+        <div class="w3-row-padding privacy w3-container ">
+            <h3 class="w3-center w3-text-black">TBR Shelf</h3>
+        </div>
+        
+        <div class="w3-container w3-row-padding external w3-center shadow">
+            {% for book in tbr_books %}
+                <div class="w3-third w3-hover-opacity w3-container w3-display-container" style="height:390px;">
+                    <a href="{{ url_for('user_book', username=current_user.f_name, title=book.title, bookid=book.volume_id) }}">
+                        <img class="w3-display-middle book internal" src='{{ book.img_url }}'>
+                        <p class="w3-display-topmiddle w3-text-white" style="text-align: center;"><b>{{ book.title }}</b></p>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+ 
 {% endblock %}
