@@ -16,7 +16,7 @@
         <h4>Go ahead and try it out!</h4>
     {% elif enough and not has_classifier %}
         <h4>You have enough entries to train your own classifier!</h4>
-        <form action="{{ url_for('user_settings', username=current_user.f_name, action='train') }}" method="post" novalidate>
+        <form action="{{ url_for('user_settings', username=current_user.username, action='train') }}" method="post" novalidate>
             <button class="btn w3-white w3-text-black" alt='Train your own classifier'>Train My Personal Classifier!</button>
         </form>
         <b>This process may take a minute or two | Please do not refresh the browser if it appears stuck!</b>
